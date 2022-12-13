@@ -15,9 +15,9 @@ func run(args []string) {
     Usage: "SCAF - Software Co-working Assistance Framework",
     Commands: []*cli.Command{
       {
-        Name:    "login",
-        Usage:   "login to SCAF",
-        Action:  user.Login,
+        Name:    "signin",
+        Usage:   "signin to SCAF",
+        Action:  user.SignInAction,
         Flags: []cli.Flag{
           &cli.BoolFlag{
             Name:  "forget-password",

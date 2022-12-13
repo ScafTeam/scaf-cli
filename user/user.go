@@ -3,31 +3,43 @@ package user
 import (
   "fmt"
   "log"
+  "net/http"
+  "encoding/json"
+  "bytes"
+
   "github.com/urfave/cli/v2"
   "golang.org/x/term"
+  "scaf/cli/request"
 )
 
-func Login(c *cli.Context) error {
+func SignInAction(c *cli.Context) error {
   var err error
   if c.Bool("forget-password") {
     err = forgetPassword(c)
   } else {
-    err = login(c)
+    var email, password string
+    // get user email
+    if c.NArg() > 0 {
+      email = c.Args().Get(0)
+    } else {
+      email = inputEmail()
+    }
+    // get user password
+    password = inputPassword()
+
+    err = signIn(email, password)
   }
   return err
 }
 
-func login(c *cli.Context) error {
-  // get user email
+func inputEmail() string {
   var email string
-  if c.NArg() > 0 {
-    email = c.Args().Get(0)
-  } else {
-    fmt.Print("Please enter your email: ")
-    fmt.Scanln(&email)
-  }
+  fmt.Print("Please enter your email: ")
+  fmt.Scanln(&email)
+  return email
+}
 
-  // get user password
+func inputPassword() string {
   var password string
   fmt.Print("Please enter your password: ")
   bytePassword, err := term.ReadPassword(0)
@@ -36,8 +48,28 @@ func login(c *cli.Context) error {
   }
   password = string(bytePassword)
   fmt.Println()
+  return password
+}
 
-  log.Println("login:", email, password)
+func signIn(email, password string) error {
+  log.Println("signIn:", email, password) // TODO: remove logging password on production
+
+  signInRequest := SignInRequest{
+    Email:    email,
+    Password: password,
+  }
+  signInRequestJSON, err := json.Marshal(signInRequest)
+  if err != nil {
+    return err
+  }
+
+  resp, err := http.Post(request.BackendURL+"/signin", "application/json", bytes.NewBuffer(signInRequestJSON))
+  defer resp.Body.Close()
+  if err != nil {
+    return err
+  }
+
+  log.Println(resp.StatusCode)
   return nil
 }
 
