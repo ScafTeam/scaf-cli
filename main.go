@@ -24,10 +24,41 @@ func main() {
             Usage: "forget password",
           },
         },
-      }, {
+      },
+      {
         Name:    "register",
         Usage:   "register to SCAF",
         Action:  user.Register,
+      },
+      {
+        Name:    "config",
+        Usage:   "configure SCAF",
+        Action:  notImplemented,
+      },
+      {
+        Name:    "project",
+        Usage:   "manage projects",
+        Action:  notImplemented,
+      },
+      {
+        Name:    "repo",
+        Usage:   "manage repositories",
+        Action:  notImplemented,
+      },
+      {
+        Name:    "doc",
+        Usage:   "manage documents",
+        Action:  notImplemented,
+      },
+      {
+        Name:    "kanban",
+        Usage:   "manage kanban boards",
+        Action:  notImplemented,
+      },
+      {
+        Name:    "qa",
+        Usage:   "show Q&A",
+        Action:  notImplemented,
       },
     },
   }
@@ -35,4 +66,8 @@ func main() {
   if err := app.Run(os.Args); err != nil {
     log.Fatal(err)
   }
+}
+
+func notImplemented(c *cli.Context) error {
+  return cli.Exit("not implemented", 1)
 }
