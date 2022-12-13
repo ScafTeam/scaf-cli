@@ -13,7 +13,8 @@ import (
 )
 
 func SignInAction(c *cli.Context) error {
-  var err error
+  var err error = nil
+  var resp *http.Response = nil
   if c.Bool("forget-password") {
     err = forgetPassword(c)
   } else {
@@ -27,8 +28,9 @@ func SignInAction(c *cli.Context) error {
     // get user password
     password = inputPassword()
 
-    err = signIn(email, password)
+    resp, err = signIn(email, password)
   }
+  log.Println(resp.StatusCode)
   return err
 }
 
@@ -51,7 +53,7 @@ func inputPassword() string {
   return password
 }
 
-func signIn(email, password string) error {
+func signIn(email, password string) (*http.Response, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
 
   signInRequest := SignInRequest{
@@ -60,7 +62,7 @@ func signIn(email, password string) error {
   }
   signInRequestJSON, err := json.Marshal(signInRequest)
   if err != nil {
-    return err
+    return nil, err
   }
 
   resp, err := http.Post(
@@ -70,11 +72,10 @@ func signIn(email, password string) error {
   )
   defer resp.Body.Close()
   if err != nil {
-    return err
+    return nil, err
   }
 
-  log.Println(resp.StatusCode)
-  return nil
+  return resp, nil
 }
 
 func forgetPassword(c *cli.Context) error {
