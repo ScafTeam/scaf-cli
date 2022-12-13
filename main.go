@@ -9,7 +9,7 @@ import (
   "scaf/cli/user"
 )
 
-func main() {
+func run(args []string) {
   app := &cli.App{
     Name:  "scaf",
     Usage: "SCAF - Software Co-working Assistance Framework",
@@ -63,9 +63,13 @@ func main() {
     },
   }
 
-  if err := app.Run(os.Args); err != nil {
+  if err := app.Run(args); err != nil {
     log.Fatal(err)
   }
+}
+
+func main() {
+  run(os.Args)
 }
 
 func notImplemented(c *cli.Context) error {
