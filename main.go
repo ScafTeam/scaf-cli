@@ -69,6 +69,7 @@ func run(args []string) {
 }
 
 func main() {
+  os.Setenv("SCAF_BACKEND_URL", "http://localhost:8000")
   run(os.Args)
 }
 

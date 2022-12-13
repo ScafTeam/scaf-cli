@@ -3,13 +3,13 @@ package user
 import (
   "fmt"
   "log"
+  "os"
   "net/http"
   "encoding/json"
   "bytes"
 
   "github.com/urfave/cli/v2"
   "golang.org/x/term"
-  "scaf/cli/request"
 )
 
 func SignInAction(c *cli.Context) error {
@@ -63,7 +63,11 @@ func signIn(email, password string) error {
     return err
   }
 
-  resp, err := http.Post(request.BackendURL+"/signin", "application/json", bytes.NewBuffer(signInRequestJSON))
+  resp, err := http.Post(
+    os.Getenv("SCAF_BACKEND_URL") + "/signin",
+    "application/json",
+    bytes.NewBuffer(signInRequestJSON),
+  )
   defer resp.Body.Close()
   if err != nil {
     return err
