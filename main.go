@@ -5,7 +5,8 @@ import (
   "os"
 
   "github.com/urfave/cli/v2"
-  "github.com/ScafTeam/scaf-cli/user"
+
+  "scaf/cli/user"
 )
 
 func main() {
