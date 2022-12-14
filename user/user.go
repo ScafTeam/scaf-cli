@@ -70,10 +70,10 @@ func signIn(email, password string) (*http.Response, error) {
     "application/json",
     bytes.NewBuffer(signInRequestJSON),
   )
-  defer resp.Body.Close()
   if err != nil {
     return nil, err
   }
+  defer resp.Body.Close()
 
   return resp, nil
 }
