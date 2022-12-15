@@ -28,7 +28,7 @@ func run(args []string) {
       {
         Name:    "register",
         Usage:   "register to SCAF",
-        Action:  user.Register,
+        Action:  user.RegisterAction,
       },
       {
         Name:    "config",
