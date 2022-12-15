@@ -9,7 +9,7 @@ import (
 )
 
 func SignInAction(c *cli.Context) error {
-  var err error = nil
+  var err error
   var resp *http.Response = nil
   var email, password string
 
@@ -21,6 +21,9 @@ func SignInAction(c *cli.Context) error {
       email = inputEmail()
     }
     resp, err = forgetPassword(email)
+    if err != nil {
+      return err
+    }
   } else {
     // if email provided as argument, use it
     if c.NArg() > 0 {
@@ -30,9 +33,12 @@ func SignInAction(c *cli.Context) error {
     }
     password = inputPassword()
     resp, err = signIn(email, password)
+    if err != nil {
+      return err
+    }
   }
   log.Println(resp.StatusCode)
-  return err
+  return nil
 }
 
 func RegisterAction(c *cli.Context) error {
