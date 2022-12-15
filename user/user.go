@@ -15,19 +15,24 @@ import (
 func SignInAction(c *cli.Context) error {
   var err error = nil
   var resp *http.Response = nil
+  var email, password string
+
   if c.Bool("forget-password") {
-    err = forgetPassword(c)
-  } else {
-    var email, password string
-    // get user email
+    // if email provided as argument, use it
     if c.NArg() > 0 {
       email = c.Args().Get(0)
     } else {
       email = inputEmail()
     }
-    // get user password
+    resp, err = forgetPassword(email)
+  } else {
+    // if email provided as argument, use it
+    if c.NArg() > 0 {
+      email = c.Args().Get(0)
+    } else {
+      email = inputEmail()
+    }
     password = inputPassword()
-
     resp, err = signIn(email, password)
   }
   log.Println(resp.StatusCode)
@@ -78,18 +83,28 @@ func signIn(email, password string) (*http.Response, error) {
   return resp, nil
 }
 
-func forgetPassword(c *cli.Context) error {
-  // get user email
-  var email string
-  if c.NArg() > 0 {
-    email = c.Args().Get(0)
-  } else {
-    fmt.Print("Please enter your email: ")
-    fmt.Scanln(&email)
+func forgetPassword(email string) (*http.Response, error) {
+  log.Println("forgetPassword:", email)
+
+  forgetPasswordRequest := ForgetPasswordRequest{
+    Email: email,
+  }
+  forgetPasswordRequestJSON, err := json.Marshal(forgetPasswordRequest)
+  if err != nil {
+    return nil, err
   }
 
-  log.Println("forget password:", email)
-  return nil
+  resp, err := http.Post(
+    os.Getenv("SCAF_BACKEND_URL") + "/forget",
+    "application/json",
+    bytes.NewBuffer(forgetPasswordRequestJSON),
+  )
+  if err != nil {
+    return nil, err
+  }
+  defer resp.Body.Close()
+
+  return resp, nil
 }
 
 func Register(c *cli.Context) error {
