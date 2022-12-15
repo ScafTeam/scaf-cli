@@ -6,7 +6,7 @@ import (
 
   "github.com/urfave/cli/v2"
 
-  "scaf/cli/user"
+  "scaf/cli/auth"
 )
 
 func run(args []string) {
@@ -17,7 +17,7 @@ func run(args []string) {
       {
         Name:    "signin",
         Usage:   "signin to SCAF",
-        Action:  user.SignInAction,
+        Action:  auth.SignInAction,
         Flags: []cli.Flag{
           &cli.BoolFlag{
             Name:  "forget-password",
@@ -28,7 +28,7 @@ func run(args []string) {
       {
         Name:    "register",
         Usage:   "register to SCAF",
-        Action:  user.RegisterAction,
+        Action:  auth.RegisterAction,
       },
       {
         Name:    "config",

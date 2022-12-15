@@ -1,4 +1,5 @@
-package user
+package auth
+// TODO: rename this file to appropriate name
 
 import (
   "log"
