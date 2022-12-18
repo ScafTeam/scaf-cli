@@ -26,9 +26,9 @@ func run(args []string) {
         },
       },
       {
-        Name:    "register",
-        Usage:   "register to SCAF",
-        Action:  auth.RegisterAction,
+        Name:    "signup",
+        Usage:   "signup to SCAF",
+        Action:  auth.SignUpAction,
       },
       {
         Name:    "config",

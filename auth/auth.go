@@ -12,7 +12,7 @@ import (
 func signIn(email, password string) (*http.Response, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
 
-  signInRequest := SignInRequest{
+  signInRequest := AuthRequest{
     Email:    email,
     Password: password,
   }
@@ -58,3 +58,27 @@ func forgetPassword(email string) (*http.Response, error) {
   return resp, nil
 }
 
+func signUp(email, password string) (*http.Response, error) {
+  log.Println("signup", email, password) // TODO: remove logging password on production
+
+  signUpRequest := AuthRequest{
+    Email:    email,
+    Password: password,
+  }
+  signUpRequestJSON, err := json.Marshal(signUpRequest)
+  if err != nil {
+    return nil, err
+  }
+
+  resp, err := http.Post(
+    os.Getenv("SCAF_BACKEND_URL") + "/signup",
+    "application/json",
+    bytes.NewBuffer(signUpRequestJSON),
+  )
+  if err != nil {
+    return nil, err
+  }
+  defer resp.Body.Close()
+
+  return resp, nil
+}
