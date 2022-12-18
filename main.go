@@ -70,6 +70,9 @@ func run(args []string) {
 
 func main() {
   os.Setenv("SCAF_BACKEND_URL", "http://localhost:8000")
+  home_dir, _ := os.UserHomeDir()
+  os.Setenv("SCAF_CONFIG_DIR", home_dir + "/.scaf")
+  os.MkdirAll(os.Getenv("SCAF_CONFIG_DIR"), 0777)
   run(os.Args)
 }
 

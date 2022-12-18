@@ -11,6 +11,7 @@ import (
 
 func signIn(email, password string) (*http.Response, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
+  var err error
 
   signInRequest := AuthRequest{
     Email:    email,
@@ -30,6 +31,11 @@ func signIn(email, password string) (*http.Response, error) {
     return nil, err
   }
   defer resp.Body.Close()
+
+  err = saveCookies(resp)
+  if err != nil {
+    return nil, err
+  }
 
   return resp, nil
 }
@@ -55,6 +61,11 @@ func forgetPassword(email string) (*http.Response, error) {
   }
   defer resp.Body.Close()
 
+  err = saveCookies(resp)
+  if err != nil {
+    return nil, err
+  }
+
   return resp, nil
 }
 
@@ -79,6 +90,11 @@ func signUp(email, password string) (*http.Response, error) {
     return nil, err
   }
   defer resp.Body.Close()
+
+  err = saveCookies(resp)
+  if err != nil {
+    return nil, err
+  }
 
   return resp, nil
 }
