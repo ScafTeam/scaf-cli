@@ -29,6 +29,7 @@ func SignInAction(c *cli.Context) error {
     if err != nil {
       return err
     }
+    defer resp.Body.Close()
 
     log.Println(resp.StatusCode)
     return nil
@@ -49,6 +50,7 @@ func ForgetPasswordAction(c *cli.Context) error {
   if err != nil {
     return err
   }
+  defer resp.Body.Close()
 
   log.Println(resp.StatusCode)
   return nil
@@ -74,6 +76,7 @@ func SignUpAction(c *cli.Context) error {
   if err != nil {
     return err
   }
+  defer resp.Body.Close()
 
   log.Println(resp.StatusCode)
   return nil

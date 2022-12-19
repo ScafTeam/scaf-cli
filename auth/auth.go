@@ -30,7 +30,6 @@ func signIn(email, password string) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
@@ -59,7 +58,6 @@ func forgetPassword(email string) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
@@ -89,7 +87,6 @@ func signUp(email, password string) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
