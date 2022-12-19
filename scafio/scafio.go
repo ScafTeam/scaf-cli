@@ -6,6 +6,7 @@ import (
   "encoding/json"
   "io/ioutil"
   "golang.org/x/term"
+  "github.com/urfave/cli/v2"
 )
 
 func InputEmail() (string, error) {
@@ -51,6 +52,22 @@ func InputComfirmedPassword(retry_times int) (string, error) {
   }
   return "", fmt.Errorf("password confirmation failed")
 }
+
+// get email from first argument, or prompt user to input
+func GetEmail(c *cli.Context) (string, error) {
+  var email string
+  var err error
+  if c.NArg() > 0 {
+    email = c.Args().Get(0)
+  } else {
+    email, err = InputEmail()
+    if err != nil {
+      return "", err
+    }
+  }
+  return email, nil
+}
+
 
 func OutputWhoami(resp *http.Response) error {
   if resp == nil {

@@ -15,7 +15,7 @@ func SignInAction(c *cli.Context) error {
     var err error
     var resp *http.Response = nil
     var email, password string
-    email, err = getEmail(c)
+    email, err = scafio.GetEmail(c)
     if err != nil {
       return err
     }
@@ -41,7 +41,7 @@ func ForgetPasswordAction(c *cli.Context) error {
   var resp *http.Response = nil
   var email string
 
-  email, err = getEmail(c)
+  email, err = scafio.GetEmail(c)
   if err != nil {
     return err
   }
@@ -62,7 +62,7 @@ func SignUpAction(c *cli.Context) error {
   var resp *http.Response = nil
   var email, password string
 
-  email, err = getEmail(c)
+  email, err = scafio.GetEmail(c)
   if err != nil {
     return err
   }
@@ -99,19 +99,3 @@ func WhoamiAction(c *cli.Context) error {
   }
   return nil
 }
-
-// get email from first argument, or prompt user to input
-func getEmail(c *cli.Context) (string, error) {
-  var email string
-  var err error
-  if c.NArg() > 0 {
-    email = c.Args().Get(0)
-  } else {
-    email, err = scafio.InputEmail()
-    if err != nil {
-      return "", err
-    }
-  }
-  return email, nil
-}
-
