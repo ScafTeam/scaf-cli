@@ -56,7 +56,17 @@ func saveCookies(resp *http.Response) error {
   }
 
   for _, cookie := range resp.Cookies() {
-    cookies = append(cookies, cookie)
+    var found bool = false
+    for i, c := range cookies {
+      if c.Name == cookie.Name {
+        cookies[i] = cookie
+        found = true
+        break
+      }
+    }
+    if !found {
+      cookies = append(cookies, cookie)
+    }
   }
 
   data, err := json.Marshal(cookies)
