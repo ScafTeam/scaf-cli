@@ -51,3 +51,29 @@ func InputComfirmedPassword(retry_times int) (string, error) {
   }
   return "", fmt.Errorf("password confirmation failed")
 }
+
+func OutputWhoami(resp *http.Response) error {
+  if resp == nil {
+    fmt.Println("You are not logged in")
+    return nil
+  }
+
+  body, err := ioutil.ReadAll(resp.Body)
+  if err != nil {
+    return err
+  }
+
+  bodyMap := make(map[string]interface{})
+  err = json.Unmarshal(body, &bodyMap)
+  if err != nil {
+    return err
+  }
+
+  if val, ok := bodyMap["uesrEmail_claims"]; ok { // TODO: fix backend typo
+    fmt.Println("You are logged in as", val)
+  } else {
+    fmt.Println("You are not logged in")
+  }
+
+  return nil
+}

@@ -95,3 +95,24 @@ func signUp(email, password string) (*http.Response, error) {
 
   return resp, nil
 }
+
+func whoami() (*http.Response, error) {
+  jwt, err := readJWT()
+  if err != nil {
+    return nil, err
+  }
+
+  client := &http.Client{}
+  req, err := http.NewRequest("GET", os.Getenv("SCAF_BACKEND_URL") + "/hello", nil)
+  if err != nil {
+    return nil, err
+  }
+  
+  req.Header.Add("Authorization", "Bearer " + jwt)
+  resp, err := client.Do(req)
+  if err != nil {
+    return nil, err
+  }
+
+  return resp, nil
+}

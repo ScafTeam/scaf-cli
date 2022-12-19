@@ -82,6 +82,24 @@ func SignUpAction(c *cli.Context) error {
   return nil
 }
 
+func WhoamiAction(c *cli.Context) error {
+  var err error
+  var resp *http.Response = nil
+
+  resp, err = whoami()
+  if err != nil {
+    log.Println(err)
+  } else {
+    defer resp.Body.Close()
+  }
+
+  err = scafio.OutputWhoami(resp)
+  if err != nil {
+    return err
+  }
+  return nil
+}
+
 // get email from first argument, or prompt user to input
 func getEmail(c *cli.Context) (string, error) {
   var email string

@@ -5,7 +5,23 @@ import (
   "net/http"
   "encoding/json"
   "io/ioutil"
+  "errors"
 )
+
+func readJWT() (string, error) {
+  cookies, err := readCookies()
+  if err != nil {
+    return "", err
+  }
+
+  for _, cookie := range cookies {
+    if cookie.Name == "jwt" {
+      return cookie.Value, nil
+    }
+  }
+
+  return "", errors.New("jwt not found")
+}
 
 func readCookies() ([]*http.Cookie, error) {
   if _, err := os.Stat(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json"); err != nil {

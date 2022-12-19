@@ -60,6 +60,11 @@ func run(args []string) {
         Usage:   "show Q&A",
         Action:  notImplemented,
       },
+      {
+        Name:    "whoami",
+        Usage:   "show current user",
+        Action:  auth.WhoamiAction,
+      },
     },
   }
 
