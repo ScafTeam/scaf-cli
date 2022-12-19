@@ -94,3 +94,7 @@ func OutputWhoami(resp *http.Response) error {
 
   return nil
 }
+
+func PrintProject(projectMap map[string]interface{}) {
+  fmt.Printf("* [%s] %s (%s)\n", projectMap["Id"], projectMap["Name"], projectMap["Author"])
+}

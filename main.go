@@ -7,6 +7,7 @@ import (
   "github.com/urfave/cli/v2"
 
   "scaf/cli/auth"
+  "scaf/cli/project"
 )
 
 func run(args []string) {
@@ -43,7 +44,7 @@ func run(args []string) {
       {
         Name:    "project",
         Usage:   "manage projects",
-        Action:  notImplemented,
+        Action:  project.ListProjectsAction,
       },
       {
         Name:    "repo",

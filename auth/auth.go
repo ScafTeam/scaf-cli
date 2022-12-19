@@ -116,7 +116,7 @@ func whoami() (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  
+
   req.Header.Add("Authorization", "Bearer " + jwt)
   resp, err := client.Do(req)
   if err != nil {
