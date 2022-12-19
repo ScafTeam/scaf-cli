@@ -5,7 +5,7 @@ import (
   "net/http"
   "github.com/urfave/cli/v2"
 
-  "scaf/cli/input"
+  "scaf/cli/scafio"
 )
 
 func SignInAction(c *cli.Context) error {
@@ -20,7 +20,7 @@ func SignInAction(c *cli.Context) error {
       return err
     }
 
-    password, err = input.InputPassword()
+    password, err = scafio.InputPassword()
     if err != nil {
       return err
     }
@@ -65,7 +65,7 @@ func SignUpAction(c *cli.Context) error {
     return err
   }
 
-  password, err = input.InputComfirmedPassword(3)
+  password, err = scafio.InputComfirmedPassword(3)
   if err != nil {
     return err
   }
@@ -86,7 +86,7 @@ func getEmail(c *cli.Context) (string, error) {
   if c.NArg() > 0 {
     email = c.Args().Get(0)
   } else {
-    email, err = input.InputEmail()
+    email, err = scafio.InputEmail()
     if err != nil {
       return "", err
     }

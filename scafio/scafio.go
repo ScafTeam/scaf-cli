@@ -1,7 +1,10 @@
-package input
+package scafio
 
 import (
   "fmt"
+  "net/http"
+  "encoding/json"
+  "io/ioutil"
   "golang.org/x/term"
 )
 
