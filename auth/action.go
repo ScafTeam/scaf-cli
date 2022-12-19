@@ -82,6 +82,18 @@ func SignUpAction(c *cli.Context) error {
   return nil
 }
 
+func SignOutAction(c *cli.Context) error {
+  var err error
+
+  err = signOut()
+  if err != nil {
+    return err
+  }
+
+  log.Println("Signed out")
+  return nil
+}
+
 func WhoamiAction(c *cli.Context) error {
   var err error
   var resp *http.Response = nil

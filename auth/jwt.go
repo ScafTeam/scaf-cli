@@ -71,3 +71,8 @@ func saveCookies(resp *http.Response) error {
 
   return nil
 }
+
+// TODO: refactor deleteCookies
+func deleteCookies() error {
+  return os.Remove(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json")
+}

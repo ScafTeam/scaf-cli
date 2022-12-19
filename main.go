@@ -31,6 +31,11 @@ func run(args []string) {
         Action:  auth.SignUpAction,
       },
       {
+        Name:    "signout",
+        Usage:   "signout from SCAF",
+        Action:  auth.SignOutAction,
+      },
+      {
         Name:    "config",
         Usage:   "configure SCAF",
         Action:  notImplemented,

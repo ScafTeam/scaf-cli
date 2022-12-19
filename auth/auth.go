@@ -39,6 +39,15 @@ func signIn(email, password string) (*http.Response, error) {
   return resp, nil
 }
 
+func signOut() error {
+  err := deleteCookies()
+  if err != nil {
+    return err
+  }
+
+  return nil
+}
+
 func forgetPassword(email string) (*http.Response, error) {
   log.Println("forgetPassword:", email)
 
