@@ -13,9 +13,9 @@ import (
 func signIn(email, password string) (string, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
 
-  signInRequest := AuthRequest{
-    Email:    email,
-    Password: password,
+  signInRequest := map[string]string{
+    "email":    email,
+    "password": password,
   }
   signInRequestJSON, err := json.Marshal(signInRequest)
   if err != nil {
@@ -57,8 +57,8 @@ func signOut() (string, error) {
 func forgetPassword(email string) (string, error) {
   log.Println("forgetPassword:", email)
 
-  forgetPasswordRequest := ForgetPasswordRequest{
-    Email: email,
+  forgetPasswordRequest := map[string]string{
+    "email": email,
   }
   forgetPasswordRequestJSON, err := json.Marshal(forgetPasswordRequest)
   if err != nil {
@@ -91,9 +91,9 @@ func forgetPassword(email string) (string, error) {
 func signUp(email, password string) (string, error) {
   log.Println("signup", email, password) // TODO: remove logging password on production
 
-  signUpRequest := AuthRequest{
-    Email:    email,
-    Password: password,
+  signUpRequest := map[string]string{
+    "email":    email,
+    "password": password,
   }
   signUpRequestJSON, err := json.Marshal(signUpRequest)
   if err != nil {
