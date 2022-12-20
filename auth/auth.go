@@ -12,7 +12,6 @@ import (
 
 func signIn(email, password string) (string, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
-  var err error
 
   signInRequest := AuthRequest{
     Email:    email,
@@ -80,7 +79,6 @@ func forgetPassword(email string) (string, error) {
   if err != nil {
     return "", err
   }
-  log.Println("forgetPassword: saved cookies")
 
   body, err := scafio.ReadBody(resp)
   if err != nil {

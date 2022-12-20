@@ -12,14 +12,12 @@ func SignInAction(c *cli.Context) error {
   if c.Bool("forget-password") {
     return ForgetPasswordAction(c)
   } else {
-    var err error
-    var email, password string
-    email, err = scafio.GetEmail(c)
+    email, err := scafio.GetEmail(c)
     if err != nil {
       return err
     }
 
-    password, err = scafio.InputPassword()
+    password, err := scafio.InputPassword()
     if err != nil {
       return err
     }
@@ -35,10 +33,7 @@ func SignInAction(c *cli.Context) error {
 }
 
 func ForgetPasswordAction(c *cli.Context) error {
-  var err error
-  var email string
-
-  email, err = scafio.GetEmail(c)
+  email, err := scafio.GetEmail(c)
   if err != nil {
     return err
   }
@@ -53,15 +48,12 @@ func ForgetPasswordAction(c *cli.Context) error {
 }
 
 func SignUpAction(c *cli.Context) error {
-  var err error
-  var email, password string
-
-  email, err = scafio.GetEmail(c)
+  email, err := scafio.GetEmail(c)
   if err != nil {
     return err
   }
 
-  password, err = scafio.InputComfirmedPassword(3)
+  password, err := scafio.InputComfirmedPassword(3)
   if err != nil {
     return err
   }
@@ -76,8 +68,6 @@ func SignUpAction(c *cli.Context) error {
 }
 
 func SignOutAction(c *cli.Context) error {
-  var err error
-
   message, err := signOut()
   if err != nil {
     return err
@@ -88,8 +78,6 @@ func SignOutAction(c *cli.Context) error {
 }
 
 func WhoamiAction(c *cli.Context) error {
-  var err error
-
   message, err := whoami()
   if err != nil {
     log.Println(err)
