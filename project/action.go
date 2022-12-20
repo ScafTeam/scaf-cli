@@ -6,18 +6,14 @@ import (
 )
 
 func ListProjectsAction(c *cli.Context) error {
-  var err error
-  var email string
-  email, err = scafio.GetEmail(c)
+  email, err := scafio.GetEmail(c)
   if err != nil {
     return err
   }
-
   projects, err := getProjects(email)
   if err != nil {
     return err
   }
-
   for _, project := range projects {
     projectMap := project.(map[string]interface{})
     scafio.PrintProject(projectMap)

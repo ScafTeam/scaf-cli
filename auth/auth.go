@@ -3,11 +3,9 @@ package auth
 
 import (
   "log"
-  "os"
-  "net/http"
   "encoding/json"
-  "bytes"
   "scaf/cli/scafio"
+  "scaf/cli/scafreq"
 )
 
 func signIn(email, password string) (string, error) {
@@ -21,22 +19,15 @@ func signIn(email, password string) (string, error) {
   if err != nil {
     return "", err
   }
-
-  resp, err := http.Post(
-    os.Getenv("SCAF_BACKEND_URL") + "/signin",
-    "application/json",
-    bytes.NewBuffer(signInRequestJSON),
-  )
+  req, err := scafreq.NewRequest("POST", "/signin", signInRequestJSON)
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
   if err != nil {
     return "", err
   }
   defer resp.Body.Close()
-
-  err = saveCookies(resp)
-  if err != nil {
-    return "", err
-  }
-
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
@@ -46,7 +37,7 @@ func signIn(email, password string) (string, error) {
 }
 
 func signOut() (string, error) {
-  err := deleteCookies()
+  err := scafreq.DeleteCookies()
   if err != nil {
     return "", err
   }
@@ -64,22 +55,14 @@ func forgetPassword(email string) (string, error) {
   if err != nil {
     return "", err
   }
-
-  resp, err := http.Post(
-    os.Getenv("SCAF_BACKEND_URL") + "/forgot",
-    "application/json",
-    bytes.NewBuffer(forgetPasswordRequestJSON),
-  )
+  req, err := scafreq.NewRequest("POST", "/forgot", forgetPasswordRequestJSON)
   if err != nil {
     return "", err
   }
-  defer resp.Body.Close()
-
-  err = saveCookies(resp)
+  resp, err := scafreq.DoRequest(req)
   if err != nil {
     return "", err
   }
-
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
@@ -99,52 +82,33 @@ func signUp(email, password string) (string, error) {
   if err != nil {
     return "", err
   }
-
-  resp, err := http.Post(
-    os.Getenv("SCAF_BACKEND_URL") + "/signup",
-    "application/json",
-    bytes.NewBuffer(signUpRequestJSON),
-  )
+  req, err := scafreq.NewRequest("POST", "/signup", signUpRequestJSON)
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
   if err != nil {
     return "", err
   }
   defer resp.Body.Close()
-
-  err = saveCookies(resp)
-  if err != nil {
-    return "", err
-  }
-
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
   }
-
   return body["message"].(string), nil
 }
 
 func whoami() (string, error) {
-  jwt, err := readJWT()
-  if err != nil {
-    jwt = ""
-  }
-
-  client := &http.Client{}
-  req, err := http.NewRequest("GET", os.Getenv("SCAF_BACKEND_URL") + "/hello", nil)
+  req, err := scafreq.NewRequest("GET", "/hello", nil)
   if err != nil {
     return "", err
   }
-
-  req.Header.Add("Authorization", "Bearer " + jwt)
-  resp, err := client.Do(req)
+  resp, err := scafreq.DoRequest(req)
   if err != nil {
     return "", err
   }
-
+  defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
-  if err != nil {
-    return "", err
-  }
 
   if val, ok := body["uesrEmail_claims"]; ok { // TODO: fix backend typo
     return "You are logged in as " + val.(string), nil

@@ -1,4 +1,4 @@
-package auth
+package scafreq
 
 import (
   "os"
@@ -83,6 +83,6 @@ func saveCookies(resp *http.Response) error {
 }
 
 // TODO: refactor deleteCookies
-func deleteCookies() error {
+func DeleteCookies() error {
   return os.Remove(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json")
 }

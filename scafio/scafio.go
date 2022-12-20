@@ -11,7 +11,7 @@ import (
 
 func InputEmail() (string, error) {
   var email string
-  fmt.Print("Please enter your email: ")
+  fmt.Print("Please enter email: ")
   fmt.Scanln(&email)
   return email, nil
 }
@@ -79,7 +79,6 @@ func ReadBody(resp *http.Response) (map[string]interface{}, error) {
   if err != nil {
     return nil, err
   }
-
   bodyMap := make(map[string]interface{})
   err = json.Unmarshal(body, &bodyMap)
   if err != nil {
