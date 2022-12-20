@@ -69,32 +69,22 @@ func GetEmail(c *cli.Context) (string, error) {
 }
 
 
-func OutputWhoami(resp *http.Response) error {
-  if resp == nil {
-    fmt.Println("You are not logged in")
-    return nil
-  }
+func PrintProject(projectMap map[string]interface{}) {
+  fmt.Printf("* [%s] %s (%s)\n", projectMap["Id"], projectMap["Name"], projectMap["Author"])
+}
 
+// read json format response body and return a map
+func ReadBody(resp *http.Response) (map[string]interface{}, error) {
   body, err := ioutil.ReadAll(resp.Body)
   if err != nil {
-    return err
+    return nil, err
   }
 
   bodyMap := make(map[string]interface{})
   err = json.Unmarshal(body, &bodyMap)
   if err != nil {
-    return err
+    bodyMap["message"] = string(body)
   }
 
-  if val, ok := bodyMap["uesrEmail_claims"]; ok { // TODO: fix backend typo
-    fmt.Println("You are logged in as", val)
-  } else {
-    fmt.Println("You are not logged in")
-  }
-
-  return nil
-}
-
-func PrintProject(projectMap map[string]interface{}) {
-  fmt.Printf("* [%s] %s (%s)\n", projectMap["Id"], projectMap["Name"], projectMap["Author"])
+  return bodyMap, nil
 }

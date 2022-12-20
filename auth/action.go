@@ -2,7 +2,7 @@ package auth
 
 import (
   "log"
-  "net/http"
+  "fmt"
   "github.com/urfave/cli/v2"
 
   "scaf/cli/scafio"
@@ -13,7 +13,6 @@ func SignInAction(c *cli.Context) error {
     return ForgetPasswordAction(c)
   } else {
     var err error
-    var resp *http.Response = nil
     var email, password string
     email, err = scafio.GetEmail(c)
     if err != nil {
@@ -25,20 +24,18 @@ func SignInAction(c *cli.Context) error {
       return err
     }
 
-    resp, err = signIn(email, password)
+    message, err := signIn(email, password)
     if err != nil {
       return err
     }
-    defer resp.Body.Close()
 
-    log.Println(resp.StatusCode)
+    fmt.Println(message)
     return nil
   }
 }
 
 func ForgetPasswordAction(c *cli.Context) error {
   var err error
-  var resp *http.Response = nil
   var email string
 
   email, err = scafio.GetEmail(c)
@@ -46,20 +43,17 @@ func ForgetPasswordAction(c *cli.Context) error {
     return err
   }
 
-  resp, err = forgetPassword(email)
+  message, err := forgetPassword(email)
   if err != nil {
     return err
   }
-  defer resp.Body.Close()
 
-  log.Println(resp.StatusCode)
+  fmt.Println(message)
   return nil
 }
 
-
 func SignUpAction(c *cli.Context) error {
   var err error
-  var resp *http.Response = nil
   var email, password string
 
   email, err = scafio.GetEmail(c)
@@ -72,42 +66,35 @@ func SignUpAction(c *cli.Context) error {
     return err
   }
 
-  resp, err = signUp(email, password)
+  message, err := signUp(email, password)
   if err != nil {
     return err
   }
-  defer resp.Body.Close()
 
-  log.Println(resp.StatusCode)
+  fmt.Println(message)
   return nil
 }
 
 func SignOutAction(c *cli.Context) error {
   var err error
 
-  err = signOut()
+  message, err := signOut()
   if err != nil {
     return err
   }
 
-  log.Println("Signed out")
+  fmt.Println(message)
   return nil
 }
 
 func WhoamiAction(c *cli.Context) error {
   var err error
-  var resp *http.Response = nil
 
-  resp, err = whoami()
+  message, err := whoami()
   if err != nil {
     log.Println(err)
-  } else {
-    defer resp.Body.Close()
   }
 
-  err = scafio.OutputWhoami(resp)
-  if err != nil {
-    return err
-  }
+  fmt.Println(message)
   return nil
 }

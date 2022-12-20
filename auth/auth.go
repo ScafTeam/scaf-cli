@@ -7,9 +7,10 @@ import (
   "net/http"
   "encoding/json"
   "bytes"
+  "scaf/cli/scafio"
 )
 
-func signIn(email, password string) (*http.Response, error) {
+func signIn(email, password string) (string, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
   var err error
 
@@ -19,7 +20,7 @@ func signIn(email, password string) (*http.Response, error) {
   }
   signInRequestJSON, err := json.Marshal(signInRequest)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
   resp, err := http.Post(
@@ -28,27 +29,33 @@ func signIn(email, password string) (*http.Response, error) {
     bytes.NewBuffer(signInRequestJSON),
   )
   if err != nil {
-    return nil, err
+    return "", err
   }
+  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
-  return resp, nil
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+
+  return body["message"].(string), nil
 }
 
-func signOut() error {
+func signOut() (string, error) {
   err := deleteCookies()
   if err != nil {
-    return err
+    return "", err
   }
 
-  return nil
+  return "Signed out success", nil
 }
 
-func forgetPassword(email string) (*http.Response, error) {
+func forgetPassword(email string) (string, error) {
   log.Println("forgetPassword:", email)
 
   forgetPasswordRequest := ForgetPasswordRequest{
@@ -56,27 +63,34 @@ func forgetPassword(email string) (*http.Response, error) {
   }
   forgetPasswordRequestJSON, err := json.Marshal(forgetPasswordRequest)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
   resp, err := http.Post(
-    os.Getenv("SCAF_BACKEND_URL") + "/forget",
+    os.Getenv("SCAF_BACKEND_URL") + "/forgot",
     "application/json",
     bytes.NewBuffer(forgetPasswordRequestJSON),
   )
   if err != nil {
-    return nil, err
+    return "", err
   }
+  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
-    return nil, err
+    return "", err
+  }
+  log.Println("forgetPassword: saved cookies")
+
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
   }
 
-  return resp, nil
+  return body["message"].(string), nil
 }
 
-func signUp(email, password string) (*http.Response, error) {
+func signUp(email, password string) (string, error) {
   log.Println("signup", email, password) // TODO: remove logging password on production
 
   signUpRequest := AuthRequest{
@@ -85,7 +99,7 @@ func signUp(email, password string) (*http.Response, error) {
   }
   signUpRequestJSON, err := json.Marshal(signUpRequest)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
   resp, err := http.Post(
@@ -94,34 +108,49 @@ func signUp(email, password string) (*http.Response, error) {
     bytes.NewBuffer(signUpRequestJSON),
   )
   if err != nil {
-    return nil, err
+    return "", err
   }
+  defer resp.Body.Close()
 
   err = saveCookies(resp)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
-  return resp, nil
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+
+  return body["message"].(string), nil
 }
 
-func whoami() (*http.Response, error) {
+func whoami() (string, error) {
   jwt, err := readJWT()
   if err != nil {
-    return nil, err
+    jwt = ""
   }
 
   client := &http.Client{}
   req, err := http.NewRequest("GET", os.Getenv("SCAF_BACKEND_URL") + "/hello", nil)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
   req.Header.Add("Authorization", "Bearer " + jwt)
   resp, err := client.Do(req)
   if err != nil {
-    return nil, err
+    return "", err
   }
 
-  return resp, nil
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+
+  if val, ok := body["uesrEmail_claims"]; ok { // TODO: fix backend typo
+    return "You are logged in as " + val.(string), nil
+  } else {
+    return "You are not logged in", nil
+  }
 }
