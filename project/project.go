@@ -9,7 +9,7 @@ import (
 func getProjects(email string) ([]interface{}, error) {
   log.Println("getProjects:", email)
 
-  req, err := scafreq.NewRequest("GET", "/" + email + "/project", nil)
+  req, err := scafreq.NewRequest("GET", "/user/" + email + "/project", nil)
   if err != nil {
     return nil, err
   }
