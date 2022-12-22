@@ -99,6 +99,7 @@ func signUp(email, password string) (string, error) {
 }
 
 func whoami() (string, error) {
+  // TODO: fix api to /user/:email
   req, err := scafreq.NewRequest("GET", "/hello", nil)
   if err != nil {
     return "", err
