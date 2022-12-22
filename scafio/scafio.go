@@ -53,6 +53,33 @@ func InputComfirmedPassword(retry_times int) (string, error) {
   return "", fmt.Errorf("password confirmation failed")
 }
 
+// InputLine: get input from user, have default value and required option, and can get value from cli.Context
+func InputLine(message string, required bool, defaultValue string, c *cli.Context, index int) (string, error) {
+  var input string
+
+  if c.NArg() > index {
+    input = c.Args().Get(index)
+  } else {
+    if required && defaultValue == "" {
+      fmt.Printf("%s *: ", message)
+    } else if defaultValue != "" {
+      fmt.Printf("%s [%s]: ", message, defaultValue)
+    } else {
+      fmt.Printf("%s: ", message)
+    }
+
+    fmt.Scanln(&input)
+    if input == "" {
+      input = defaultValue
+    }
+  }
+
+  if required && input == "" {
+    return "", errors.New(fmt.Sprintf("%s is required", message))
+  }
+  return input, nil
+}
+
 // get email from first argument, or prompt user to input
 func GetEmail(c *cli.Context) (string, error) {
   var email string
