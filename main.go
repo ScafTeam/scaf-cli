@@ -45,6 +45,13 @@ func run(args []string) {
         Name:    "project",
         Usage:   "manage projects",
         Action:  project.ListProjectsAction,
+        Subcommands: []*cli.Command{
+          {
+            Name:    "create",
+            Usage:   "create a new project",
+            Action:  project.CreateProjectAction,
+          },
+        },
       },
       {
         Name:    "repo",

@@ -2,6 +2,7 @@ package project
 
 import (
   "log"
+  "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
 )
@@ -25,4 +26,32 @@ func getProjects(email string) ([]interface{}, error) {
   // log.Println(string(bodyIndent))
 
   return body["projects"].([]interface{}), nil
+}
+
+func createProject(name string, devMode string, devTools []string) (string, error) {
+  log.Println("createProject:", name, devMode, devTools)
+
+  createProjectRequest := map[string]interface{}{
+    "name": name,
+    "devMode": devMode,
+    "devTools": devTools,
+  }
+  createProjectRequestJSON, err := json.Marshal(createProjectRequest)
+  if err != nil {
+    return "", err
+  }
+  req, err := scafreq.NewRequest("POST", "/user/jteng2127@test.com/project", createProjectRequestJSON)
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+
+  return body["message"].(string), nil
 }

@@ -26,6 +26,11 @@ var (
     Prompt: &survey.Password{ Message: "Please confirm your password:" },
     Validate: survey.Required,
   }
+  ProjectNameQuestion = &survey.Question{
+    Name: "ProjectName",
+    Prompt: &survey.Input{ Message: "Please input your project name:" },
+    Validate: survey.Required,
+  }
 )
 
 func GetArg(c *cli.Context, index int) (string, error) {
