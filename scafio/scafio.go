@@ -2,99 +2,38 @@ package scafio
 
 import (
   "fmt"
+  "errors"
   "net/http"
   "encoding/json"
   "io/ioutil"
-  "golang.org/x/term"
+  "github.com/AlecAivazis/survey/v2"
   "github.com/urfave/cli/v2"
 )
 
-func InputEmail() (string, error) {
-  var email string
-  fmt.Print("Please enter email: ")
-  fmt.Scanln(&email)
-  return email, nil
-}
-
-func InputPassword() (string, error) {
-  var password string
-  var err error
-  fmt.Print("Please enter your password: ")
-  bytePassword, err := term.ReadPassword(0)
-  if err != nil {
-    return "", err
+var (
+  EmailQuestion = &survey.Question{
+    Name: "Email",
+    Prompt: &survey.Input{ Message: "Please input your email:" },
+    Validate: survey.Required,
   }
-  password = string(bytePassword)
-  fmt.Println()
-  return password, nil
-
-}
-
-func InputComfirmedPassword(retry_times int) (string, error) {
-  var password string
-  var err error
-  for i := 0; i < retry_times; i++ {
-    password, err = InputPassword()
-    if err != nil {
-      return "", err
-    }
-    fmt.Print("Please enter your password again: ")
-    bytePassword, err := term.ReadPassword(0)
-    if err != nil {
-      return "", err
-    }
-    confirmedPassword := string(bytePassword)
-    fmt.Println()
-    if password == confirmedPassword {
-      return password, nil
-    }
-    fmt.Println("Password not match, please try again")
+  PasswordQuestion = &survey.Question{
+    Name: "Password",
+    Prompt: &survey.Password{ Message: "Please input your password:" },
+    Validate: survey.Required,
   }
-  return "", fmt.Errorf("password confirmation failed")
-}
+  PasswordConfirmQuestion = &survey.Question{
+    Name: "PasswordConfirm",
+    Prompt: &survey.Password{ Message: "Please confirm your password:" },
+    Validate: survey.Required,
+  }
+)
 
-// InputLine: get input from user, have default value and required option, and can get value from cli.Context
-func InputLine(message string, required bool, defaultValue string, c *cli.Context, index int) (string, error) {
-  var input string
-
+func GetArg(c *cli.Context, index int) (string, error) {
   if c.NArg() > index {
-    input = c.Args().Get(index)
-  } else {
-    if required && defaultValue == "" {
-      fmt.Printf("%s *: ", message)
-    } else if defaultValue != "" {
-      fmt.Printf("%s [%s]: ", message, defaultValue)
-    } else {
-      fmt.Printf("%s: ", message)
-    }
-
-    fmt.Scanln(&input)
-    if input == "" {
-      input = defaultValue
-    }
+    return c.Args().Get(index), nil
   }
-
-  if required && input == "" {
-    return "", errors.New(fmt.Sprintf("%s is required", message))
-  }
-  return input, nil
+  return "", errors.New("argument not found")
 }
-
-// get email from first argument, or prompt user to input
-func GetEmail(c *cli.Context) (string, error) {
-  var email string
-  var err error
-  if c.NArg() > 0 {
-    email = c.Args().Get(0)
-  } else {
-    email, err = InputEmail()
-    if err != nil {
-      return "", err
-    }
-  }
-  return email, nil
-}
-
 
 func PrintProject(projectMap map[string]interface{}) {
   fmt.Printf("* [%s] %s (%s)\n", projectMap["Id"], projectMap["Name"], projectMap["Author"])

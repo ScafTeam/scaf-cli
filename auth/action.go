@@ -4,6 +4,7 @@ import (
   "log"
   "fmt"
   "github.com/urfave/cli/v2"
+  "github.com/AlecAivazis/survey/v2"
 
   "scaf/cli/scafio"
 )
@@ -12,17 +13,25 @@ func SignInAction(c *cli.Context) error {
   if c.Bool("forget-password") {
     return ForgetPasswordAction(c)
   } else {
-    email, err := scafio.GetEmail(c)
+    var err error
+    questions := []*survey.Question{}
+    answers := struct {
+      Email string
+      Password string
+    }{}
+
+    answers.Email, err = scafio.GetArg(c, 0)
+    if err != nil {
+      questions = append(questions, scafio.EmailQuestion)
+    }
+    questions = append(questions, scafio.PasswordQuestion)
+
+    err = survey.Ask(questions, &answers)
     if err != nil {
       return err
     }
 
-    password, err := scafio.InputPassword()
-    if err != nil {
-      return err
-    }
-
-    message, err := signIn(email, password)
+    message, err := signIn(answers.Email, answers.Password)
     if err != nil {
       return err
     }
@@ -33,12 +42,23 @@ func SignInAction(c *cli.Context) error {
 }
 
 func ForgetPasswordAction(c *cli.Context) error {
-  email, err := scafio.GetEmail(c)
+  var err error
+  questions := []*survey.Question{}
+  answers := struct {
+    Email string
+  }{}
+
+  answers.Email, err = scafio.GetArg(c, 0)
+  if err != nil {
+    questions = append(questions, scafio.EmailQuestion)
+  }
+
+  err = survey.Ask(questions, &answers)
   if err != nil {
     return err
   }
 
-  message, err := forgetPassword(email)
+  message, err := forgetPassword(answers.Email)
   if err != nil {
     return err
   }
@@ -48,17 +68,42 @@ func ForgetPasswordAction(c *cli.Context) error {
 }
 
 func SignUpAction(c *cli.Context) error {
-  email, err := scafio.GetEmail(c)
+  var err error
+  questions := []*survey.Question{}
+  answers := struct {
+    Email string
+    Password string
+    PasswordConfirm string
+  }{}
+
+  answers.Email, err = scafio.GetArg(c, 0)
   if err != nil {
-    return err
+    err = survey.Ask([]*survey.Question{scafio.EmailQuestion}, &answers)
+    if err != nil {
+      return err
+    }
+  }
+  questions = append(questions, scafio.PasswordQuestion)
+  questions = append(questions, scafio.PasswordConfirmQuestion)
+
+  for i := 0; i < 3; i++ {
+    if i > 0 {
+      fmt.Println("Passwords do not match. Please try again.")
+    }
+    err = survey.Ask(questions, &answers)
+    if err != nil {
+      return err
+    }
+    if answers.Password == answers.PasswordConfirm {
+      break
+    }
   }
 
-  password, err := scafio.InputComfirmedPassword(3)
-  if err != nil {
-    return err
+  if answers.Password != answers.PasswordConfirm {
+    return fmt.Errorf("Passwords do not match.")
   }
 
-  message, err := signUp(email, password)
+  message, err := signUp(answers.Email, answers.Password)
   if err != nil {
     return err
   }
