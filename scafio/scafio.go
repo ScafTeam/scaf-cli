@@ -13,7 +13,7 @@ import (
 var (
   EmailQuestion = &survey.Question{
     Name: "Email",
-    Prompt: &survey.Input{ Message: "Please input your email:" },
+    Prompt: &survey.Input{ Message: "Please input email:" },
     Validate: survey.Required,
   }
   PasswordQuestion = &survey.Question{

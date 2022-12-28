@@ -16,6 +16,11 @@ func run(args []string) {
     Usage: "SCAF - Software Co-working Assistance Framework",
     Commands: []*cli.Command{
       {
+        Name:    "user",
+        Usage:   "user",
+        Action:  auth.GetUserAction,
+      },
+      {
         Name:    "signin",
         Usage:   "signin to SCAF",
         Action:  auth.SignInAction,
@@ -46,6 +51,11 @@ func run(args []string) {
         Usage:   "manage projects",
         Action:  project.ListProjectsAction,
         Subcommands: []*cli.Command{
+          {
+            Name:    "list",
+            Usage:   "list projects",
+            Action:  project.ListProjectsAction,
+          },
           {
             Name:    "create",
             Usage:   "create a new project",

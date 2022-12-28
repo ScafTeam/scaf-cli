@@ -18,6 +18,7 @@ func getProjects(email string) ([]interface{}, error) {
   if err != nil {
     return nil, err
   }
+  defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return nil, err
@@ -53,6 +54,7 @@ func createProject(name string, devMode string, devTools []string) (string, erro
   if err != nil {
     return "", err
   }
+  defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
