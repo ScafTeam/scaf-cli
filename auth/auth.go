@@ -117,22 +117,3 @@ func whoami() (string, error) {
   return "You are signed in as " + emailCookie.Value, nil
 }
 
-func getUser(email string) (map[string]interface{}, error) {
-  log.Println("getUser:", email)
-
-  req, err := scafreq.NewRequest("GET", "/user/" + email, nil)
-  if err != nil {
-    return nil, err
-  }
-  resp, err := scafreq.DoRequest(req)
-  if err != nil {
-    return nil, err
-  }
-  defer resp.Body.Close()
-  body, err := scafio.ReadBody(resp)
-  if err != nil {
-    return nil, err
-  }
-
-  return body["data"].(map[string]interface{}), nil
-}
