@@ -40,7 +40,12 @@ func createProject(name string, devMode string, devTools []string) (string, erro
   if err != nil {
     return "", err
   }
-  req, err := scafreq.NewRequest("POST", "/user/jteng2127@test.com/project", createProjectRequestJSON)
+  emailCookie, err := scafreq.LoadCookie("email")
+  req, err := scafreq.NewRequest(
+    "POST",
+    "/user/" + emailCookie.Value + "/project",
+    createProjectRequestJSON,
+  )
   if err != nil {
     return "", err
   }
