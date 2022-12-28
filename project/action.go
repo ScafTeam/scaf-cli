@@ -45,9 +45,13 @@ func ListProjectsAction(c *cli.Context) error {
   if err != nil {
     return err
   }
-  for _, project := range projects {
-    projectMap := project.(map[string]interface{})
-    scafio.PrintProject(projectMap)
+  if len(projects) == 0 {
+    fmt.Println("No project found")
+  } else {
+    for _, project := range projects {
+      projectMap := project.(map[string]interface{})
+      scafio.PrintProject(projectMap)
+    }
   }
 
   return nil
