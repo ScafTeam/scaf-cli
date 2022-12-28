@@ -5,7 +5,7 @@ import (
   "errors"
   "net/http"
   "encoding/json"
-  "io/ioutil"
+  "io"
   "github.com/AlecAivazis/survey/v2"
   "github.com/urfave/cli/v2"
 )
@@ -46,7 +46,7 @@ func PrintProject(projectMap map[string]interface{}) {
 
 // read json format response body and return a map
 func ReadBody(resp *http.Response) (map[string]interface{}, error) {
-  body, err := ioutil.ReadAll(resp.Body)
+  body, err := io.ReadAll(resp.Body)
   if err != nil {
     return nil, err
   }
