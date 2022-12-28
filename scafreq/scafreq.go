@@ -7,6 +7,7 @@ import (
   "log"
   "net/url"
   "bytes"
+  "scaf/cli/scafio"
 )
 
 // GetClient returns a client with cookiejar, and JWT if exists
@@ -60,6 +61,13 @@ func DoRequest(req *http.Request) (*http.Response, error) {
   resp, err := client.Do(req)
   if err != nil {
     return nil, err
+  }
+  // show body for debug
+  if bodyMap, err := scafio.ReadBody(resp); err == nil {
+    log.Println("DoRequest resp body: ")
+    for k, v := range bodyMap {
+      log.Println("  ", k, ":", v)
+    }
   }
   err = SaveCookies(resp.Cookies())
   if err != nil {

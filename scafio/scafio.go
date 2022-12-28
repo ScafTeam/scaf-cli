@@ -6,6 +6,7 @@ import (
   "net/http"
   "encoding/json"
   "io"
+  "bytes"
   "github.com/AlecAivazis/survey/v2"
   "github.com/urfave/cli/v2"
 )
@@ -45,13 +46,22 @@ func PrintProject(projectMap map[string]interface{}) {
 }
 
 // read json format response body and return a map
+// then restore response body (can be read again)
 func ReadBody(resp *http.Response) (map[string]interface{}, error) {
-  body, err := io.ReadAll(resp.Body)
-  if err != nil {
-    return nil, err
+  if resp.Body != nil {
+    bodyBytes, err := io.ReadAll(resp.Body)
+    if err != nil {
+      return nil, err
+    }
+    resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+    return ReadBodyFromBytes(bodyBytes)
   }
+  return nil, nil
+}
+
+func ReadBodyFromBytes(body []byte) (map[string]interface{}, error) {
   bodyMap := make(map[string]interface{})
-  err = json.Unmarshal(body, &bodyMap)
+  err := json.Unmarshal(body, &bodyMap)
   if err != nil {
     bodyMap["message"] = string(body)
   }
