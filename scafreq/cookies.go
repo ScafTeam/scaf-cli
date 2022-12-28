@@ -1,6 +1,7 @@
 package scafreq
 
 import (
+  "log"
   "os"
   "net/http"
   "encoding/json"
@@ -8,22 +9,21 @@ import (
   "errors"
 )
 
-func readJWT() (string, error) {
-  cookies, err := readCookies()
+func LoadCookie(name string) (*http.Cookie, error) {
+  cookies, err := LoadCookies()
   if err != nil {
-    return "", err
+    return nil, err
   }
-
   for _, cookie := range cookies {
-    if cookie.Name == "jwt" {
-      return cookie.Value, nil
+    if cookie.Name == name {
+      return cookie, nil
     }
   }
 
-  return "", errors.New("jwt not found")
+  return nil, errors.New("cookie not found")
 }
 
-func readCookies() ([]*http.Cookie, error) {
+func LoadCookies() ([]*http.Cookie, error) {
   if _, err := os.Stat(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json"); err != nil {
     os.Create(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json")
     return []*http.Cookie{}, nil
@@ -33,12 +33,10 @@ func readCookies() ([]*http.Cookie, error) {
     return nil, err
   }
   defer file.Close()
-
   data, err := ioutil.ReadAll(file)
   if err != nil {
     return nil, err
   }
-
   var cookies []*http.Cookie
   err = json.Unmarshal(data, &cookies)
   if err != nil {
@@ -49,31 +47,39 @@ func readCookies() ([]*http.Cookie, error) {
   return cookies, nil
 }
 
-func saveCookies(resp *http.Response) error {
-  cookies, err := readCookies()
+func SaveCookies(new_cookies []*http.Cookie) error {
+  cookies, err := LoadCookies()
   if err != nil {
     return err
   }
-
-  for _, cookie := range resp.Cookies() {
+  for _, cookie := range new_cookies {
     var found bool = false
     for i, c := range cookies {
       if c.Name == cookie.Name {
+        log.Println("SaveCookies: update cookie", cookie.Name)
         cookies[i] = cookie
         found = true
         break
       }
     }
     if !found {
+      log.Println("SaveCookies: add cookie", cookie.Name)
       cookies = append(cookies, cookie)
     }
   }
-
-  data, err := json.Marshal(cookies)
+  err = WriteCookies(cookies)
   if err != nil {
     return err
   }
 
+  return nil
+}
+
+func WriteCookies(cookies []*http.Cookie) error {
+  data, err := json.Marshal(cookies)
+  if err != nil {
+    return err
+  }
   err = ioutil.WriteFile(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json", data, 0777)
   if err != nil {
     return err
@@ -83,6 +89,33 @@ func saveCookies(resp *http.Response) error {
 }
 
 // TODO: refactor deleteCookies
-func DeleteCookies() error {
-  return os.Remove(os.Getenv("SCAF_CONFIG_DIR") + "/cookies.json")
+func DeleteCookies(names []string) error {
+  cookies, err := LoadCookies()
+  if err != nil {
+    return err
+  }
+  new_cookies := []*http.Cookie{}
+  for _, cookie := range cookies {
+    var found bool = false
+    for _, name := range names {
+      if cookie.Name == name {
+        log.Println("DeleteCookie: delete cookie", cookie.Name)
+        found = true
+        break
+      }
+    }
+    if !found {
+      new_cookies = append(new_cookies, cookie)
+    }
+  }
+  err = WriteCookies(new_cookies)
+  if err != nil {
+    return err
+  }
+
+  return nil
+}
+
+func DeleteAllCookies() error {
+  return WriteCookies([]*http.Cookie{})
 }

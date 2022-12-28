@@ -3,6 +3,7 @@ package auth
 
 import (
   "log"
+  "net/http"
   "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
@@ -28,6 +29,14 @@ func signIn(email, password string) (string, error) {
     return "", err
   }
   defer resp.Body.Close()
+  emailCookie := http.Cookie{
+    Name:  "email",
+    Value: email,
+  }
+  err = scafreq.SaveCookies([]*http.Cookie{&emailCookie})
+  if err != nil {
+    return "", err
+  }
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
@@ -37,7 +46,7 @@ func signIn(email, password string) (string, error) {
 }
 
 func signOut() (string, error) {
-  err := scafreq.DeleteCookies()
+  err := scafreq.DeleteCookies([]string{"email", "jwt"})
   if err != nil {
     return "", err
   }
@@ -99,21 +108,10 @@ func signUp(email, password string) (string, error) {
 }
 
 func whoami() (string, error) {
-  // TODO: fix api to /user/:email
-  req, err := scafreq.NewRequest("GET", "/hello", nil)
+  // TODO: check if signin is expired
+  emailCookie, err := scafreq.LoadCookie("email")
   if err != nil {
-    return "", err
+    return "You are not signed in", nil
   }
-  resp, err := scafreq.DoRequest(req)
-  if err != nil {
-    return "", err
-  }
-  defer resp.Body.Close()
-  body, err := scafio.ReadBody(resp)
-
-  if val, ok := body["uesrEmail_claims"]; ok { // TODO: fix backend typo
-    return "You are logged in as " + val.(string), nil
-  } else {
-    return "You are not logged in", nil
-  }
+  return "You are signed in as " + emailCookie.Value, nil
 }

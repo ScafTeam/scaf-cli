@@ -4,6 +4,7 @@ import (
   "net/http"
   "net/http/cookiejar"
   "os"
+  "log"
   "net/url"
   "bytes"
 )
@@ -17,7 +18,7 @@ func GetClient() (*http.Client, error) {
   client := &http.Client{
     Jar: jar,
   }
-  jwt, err := readJWT()
+  jwtCookie, err := LoadCookie("jwt")
   if err != nil {
     return client, nil
   }
@@ -28,10 +29,7 @@ func GetClient() (*http.Client, error) {
   client.Jar.SetCookies(
     backend_url,
     []*http.Cookie{
-      &http.Cookie{
-        Name:  "jwt",
-        Value: jwt,
-      },
+      jwtCookie,
     },
   )
 
@@ -58,11 +56,12 @@ func DoRequest(req *http.Request) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
+  log.Println("DoRequest: ", req.Method, req.URL)
   resp, err := client.Do(req)
   if err != nil {
     return nil, err
   }
-  err = saveCookies(resp)
+  err = SaveCookies(resp.Cookies())
   if err != nil {
     return nil, err
   }
