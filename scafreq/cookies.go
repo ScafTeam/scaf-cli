@@ -119,3 +119,12 @@ func DeleteCookies(names []string) error {
 func DeleteAllCookies() error {
   return WriteCookies([]*http.Cookie{})
 }
+
+func LoadCookieValue(name string) (string, error) {
+  cookie, err := LoadCookie(name)
+  if err != nil {
+    return "", err
+  }
+
+  return cookie.Value, nil
+}

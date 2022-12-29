@@ -44,13 +44,13 @@ func UpdateUser(data map[string]interface{}) (string, error) {
   if err != nil {
     return "", err
   }
-  emailCookie, err := scafreq.LoadCookie("email")
+  email, err := scafreq.LoadCookieValue("email")
   if err != nil {
     return "", err
   }
   req, err := scafreq.NewRequest(
     "PUT",
-    "/user/" + emailCookie.Value,
+    "/user/" + email,
     updateUserRequestJSON)
   if err != nil {
     return "", err

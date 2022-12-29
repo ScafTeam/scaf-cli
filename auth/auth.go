@@ -110,10 +110,10 @@ func signUp(email, password string) (string, error) {
 
 func whoami() (string, error) {
   // TODO: check if signin is expired
-  emailCookie, err := scafreq.LoadCookie("email")
+  email, err := scafreq.LoadCookieValue("email")
   if err != nil {
     return "You are not signed in", nil
   }
-  return "You are signed in as " + emailCookie.Value, nil
+  return "You are signed in as " + email, nil
 }
 
