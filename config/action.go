@@ -41,6 +41,20 @@ var (
     },
     Validate: survey.Required,
   }
+  oldPasswordQuestion = &survey.Question{
+    Name: "OldPassword",
+    Prompt: &survey.Password{
+      Message: "Please input your old password:",
+    },
+    Validate: survey.Required,
+  }
+  newPasswordQuestion = &survey.Question{
+    Name: "NewPassword",
+    Prompt: &survey.Password{
+      Message: "Please input your new password:",
+    },
+    Validate: survey.Required,
+  }
 )
 
 func SetConfigAction(c *cli.Context) error {
@@ -141,5 +155,31 @@ func GetConfigAction(c *cli.Context) error {
   }
 
   fmt.Printf("%s.%s = %v\n", answers.Category, answers.Field, value)
+  return nil
+}
+
+func ChangePasswordAction(c *cli.Context) error {
+  // get config input
+  var err error
+  questions := []*survey.Question{
+    oldPasswordQuestion,
+    newPasswordQuestion,
+  }
+  answers := struct {
+    OldPassword string
+    NewPassword string
+  }{}
+  err = survey.Ask(questions, &answers)
+  if err != nil {
+    return err
+  }
+
+  // change password
+  message, err := user.ChangePassword(answers.OldPassword, answers.NewPassword)
+  if err != nil {
+    return err
+  }
+
+  fmt.Println(message)
   return nil
 }

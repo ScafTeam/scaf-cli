@@ -66,3 +66,38 @@ func UpdateUser(data map[string]interface{}) (string, error) {
   }
   return body["message"].(string), nil
 }
+
+func ChangePassword(oldPassword string, newPassword string) (string, error) {
+  log.Println("changePassword:", oldPassword, newPassword)
+
+  changePasswordRequest := map[string]interface{}{
+    "oldPassword": oldPassword,
+    "newPassword": newPassword,
+  }
+  changePasswordRequestJSON, err := json.Marshal(changePasswordRequest)
+  if err != nil {
+    return "", err
+  }
+  email, err := scafreq.LoadCookieValue("email")
+  if err != nil {
+    return "", err
+  }
+  req, err := scafreq.NewRequest(
+    "PUT",
+    "/user/" + email + "/reset",
+    changePasswordRequestJSON,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  return body["message"].(string), nil
+}

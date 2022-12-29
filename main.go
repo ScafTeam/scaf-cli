@@ -57,6 +57,11 @@ func run(args []string) {
             Usage:   "get config",
             Action:  config.GetConfigAction,
           },
+          {
+            Name:    "password",
+            Usage:   "change password",
+            Action:  config.ChangePasswordAction,
+          },
         },
       },
       {
