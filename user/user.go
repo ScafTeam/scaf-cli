@@ -8,7 +8,7 @@ import (
   "scaf/cli/scafreq"
 )
 
-func getUser(email string) (map[string]interface{}, error) {
+func GetUser(email string) (map[string]interface{}, error) {
   log.Println("getUser:", email)
 
   req, err := scafreq.NewRequest("GET", "/user/" + email, nil)

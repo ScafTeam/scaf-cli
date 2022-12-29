@@ -52,6 +52,11 @@ func run(args []string) {
             Usage:   "set config",
             Action:  config.SetConfigAction,
           },
+          {
+            Name:    "get",
+            Usage:   "get config",
+            Action:  config.GetConfigAction,
+          },
         },
       },
       {

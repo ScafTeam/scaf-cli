@@ -22,7 +22,7 @@ func GetUserAction(c *cli.Context) error {
   if err != nil {
     return err
   }
-  userData, err := getUser(answers.Email)
+  userData, err := GetUser(answers.Email)
   if err != nil {
     fmt.Println("what", err)
     return nil

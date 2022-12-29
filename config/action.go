@@ -6,6 +6,7 @@ import (
   "github.com/AlecAivazis/survey/v2"
   "scaf/cli/user"
   "scaf/cli/scafio"
+  "scaf/cli/scafreq"
 )
 
 var (
@@ -92,42 +93,53 @@ func SetConfigAction(c *cli.Context) error {
 }
 
 func GetConfigAction(c *cli.Context) error {
-  return nil
-  // // get config input
-  // var err error
-  // questions := []*survey.Question{}
-  // answers := struct {
-  //   Category string
-  //   Field    string
-  // }{}
+  // get config input
+  var err error
+  questions := []*survey.Question{}
+  answers := struct {
+    Category string
+    Field    string
+  }{}
 
-  // answers.Category, err = scafio.GetArg(c, 0)
-  // if err != nil {
-  //   questions = append(questions, categoryQuestion)
-  // }
-  // answers.Field, err = scafio.GetArg(c, 1)
-  // if err != nil {
-  //   questions = append(questions, fieldQuestion)
-  // }
-  // err = survey.Ask(questions, &answers)
-  // if err != nil {
-  //   return err
-  // }
+  answers.Category, err = scafio.GetArg(c, 0)
+  if err != nil {
+    questions = append(questions, categoryQuestion)
+  }
+  answers.Field, err = scafio.GetArg(c, 1)
+  if err != nil {
+    questions = append(questions, fieldQuestion)
+  }
+  err = survey.Ask(questions, &answers)
+  if err != nil {
+    return err
+  }
 
-  // // get config
-  // var value interface{}
-  // switch answers.Category {
-  // case User:
-  //   value, err = user.GetUser(answers.Field)
+  // get config
+  var value interface{}
+  switch answers.Category {
+  case User:
+    email, err := scafreq.LoadCookieValue("email")
+    if err != nil {
+      return err
+    }
+    userData, err := user.GetUser(email)
+    if err != nil {
+      return err
+    }
+    var ok bool
+    value, ok = userData[answers.Field]
+    if !ok {
+      return fmt.Errorf("Invalid field: %s", answers.Field)
+    }
   // case Project:
   //   value, err = project.GetProject(answers.Field)
-  // default:
-  //   err = fmt.Errorf("Invalid category: %s", answers.Category)
-  // }
-  // if err != nil {
-  //   return err
-  // }
+  default:
+    err = fmt.Errorf("Invalid category: %s", answers.Category)
+  }
+  if err != nil {
+    return err
+  }
 
-  // fmt.Printf("Config %s.%s is %v\n", answers.Category, answers.Field, value)
-  // return nil
+  fmt.Printf("%s.%s = %v\n", answers.Category, answers.Field, value)
+  return nil
 }
