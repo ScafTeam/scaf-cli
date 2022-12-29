@@ -9,6 +9,7 @@ import (
   "scaf/cli/auth"
   "scaf/cli/user"
   "scaf/cli/project"
+  "scaf/cli/config"
 )
 
 func run(args []string) {
@@ -45,7 +46,13 @@ func run(args []string) {
       {
         Name:    "config",
         Usage:   "configure SCAF",
-        Action:  notImplemented,
+        Subcommands: []*cli.Command{
+          {
+            Name:    "set",
+            Usage:   "set config",
+            Action:  config.SetConfigAction,
+          },
+        },
       },
       {
         Name:    "project",
