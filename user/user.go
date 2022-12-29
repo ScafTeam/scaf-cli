@@ -1,6 +1,7 @@
 package user
 
 import (
+  "encoding/json"
   "errors"
   "log"
   "scaf/cli/scafio"
@@ -34,4 +35,34 @@ func getUser(email string) (map[string]interface{}, error) {
     return nil, errors.New(message)
   }
   return userData, nil
+}
+
+func UpdateUser(data map[string]interface{}) (string, error) {
+  log.Println("updateUser:", data)
+
+  updateUserRequestJSON, err := json.Marshal(data)
+  if err != nil {
+    return "", err
+  }
+  emailCookie, err := scafreq.LoadCookie("email")
+  if err != nil {
+    return "", err
+  }
+  req, err := scafreq.NewRequest(
+    "PUT",
+    "/user/" + emailCookie.Value,
+    updateUserRequestJSON)
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  return body["message"].(string), nil
 }
