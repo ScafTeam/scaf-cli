@@ -41,8 +41,17 @@ func GetArg(c *cli.Context, index int) (string, error) {
   return "", errors.New("argument not found")
 }
 
-func PrintProject(projectMap map[string]interface{}) {
-  fmt.Printf("* [%s] %s (%s)\n", projectMap["Id"], projectMap["Name"], projectMap["Author"])
+func PrintProject(projectMap map[string]interface{}, oneline bool) {
+  if oneline {
+    fmt.Printf("* %v - %v (%v)\n", projectMap["id"], projectMap["name"], projectMap["author"])
+  } else {
+    fmt.Printf("* %v\n", projectMap["id"])
+    fields := []string{"name", "author", "createOn", "devMode", "devTools", "members", "repos"}
+    for _, field := range fields {
+      fmt.Printf("  %v: %v\n", field, projectMap[field])
+    }
+    fmt.Println()
+  }
 }
 
 // read json format response body and return a map

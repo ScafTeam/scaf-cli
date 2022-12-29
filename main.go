@@ -67,11 +67,16 @@ func run(args []string) {
       {
         Name:    "project",
         Usage:   "manage projects",
-        Action:  project.ListProjectsAction,
         Subcommands: []*cli.Command{
           {
             Name:    "list",
             Usage:   "list projects",
+            Flags: []cli.Flag{
+              &cli.BoolFlag{
+                Name:  "oneline",
+                Usage: "print oneline",
+              },
+            },
             Action:  project.ListProjectsAction,
           },
           {

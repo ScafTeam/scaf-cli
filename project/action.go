@@ -50,7 +50,7 @@ func ListProjectsAction(c *cli.Context) error {
   } else {
     for _, project := range projects {
       projectMap := project.(map[string]interface{})
-      scafio.PrintProject(projectMap)
+      scafio.PrintProject(projectMap, c.Bool("oneline"))
     }
   }
 
