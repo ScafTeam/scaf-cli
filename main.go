@@ -76,7 +76,7 @@ func run(args []string) {
           },
           {
             Name:    "create",
-            Usage:   "create a new project",
+            Usage:   "create a new project, and clone it",
             Action:  action.CreateProjectAction,
           },
           {
@@ -86,14 +86,14 @@ func run(args []string) {
           },
           {
             Name:    "pull",
-            Usage:   "pull a project",
+            Usage:   "pull current project, need to be in a project folder",
             Action:  action.PullProjectAction,
           },
         },
       },
       {
         Name:    "repo",
-        Usage:   "manage code repositories",
+        Usage:   "manage code repositories, need to be in a project folder",
         Subcommands: []*cli.Command{
           {
             Name:    "list",
