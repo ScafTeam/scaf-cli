@@ -9,7 +9,7 @@ import (
   "scaf/cli/scafreq"
 )
 
-func signIn(email, password string) (string, error) {
+func SignIn(email, password string) (string, error) {
   log.Println("signIn:", email, password) // TODO: remove logging password on production
 
   signInRequest := map[string]string{
@@ -45,7 +45,7 @@ func signIn(email, password string) (string, error) {
   return body["message"].(string), nil
 }
 
-func signOut() (string, error) {
+func SignOut() (string, error) {
   err := scafreq.DeleteCookies([]string{"email", "jwt"})
   if err != nil {
     return "", err
@@ -54,7 +54,7 @@ func signOut() (string, error) {
   return "Signed out success", nil
 }
 
-func forgetPassword(email string) (string, error) {
+func ForgetPassword(email string) (string, error) {
   log.Println("forgetPassword:", email)
 
   forgetPasswordRequest := map[string]string{
@@ -81,7 +81,7 @@ func forgetPassword(email string) (string, error) {
   return body["message"].(string), nil
 }
 
-func signUp(email, password string) (string, error) {
+func SignUp(email, password string) (string, error) {
   log.Println("signup", email, password) // TODO: remove logging password on production
 
   signUpRequest := map[string]string{
@@ -108,7 +108,7 @@ func signUp(email, password string) (string, error) {
   return body["message"].(string), nil
 }
 
-func whoami() (string, error) {
+func Whoami() (string, error) {
   // TODO: check if signin is expired
   email, err := scafreq.LoadCookieValue("email")
   if err != nil {
