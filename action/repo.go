@@ -2,6 +2,7 @@ package action
 
 import (
   "fmt"
+  "errors"
   "github.com/urfave/cli/v2"
   "github.com/AlecAivazis/survey/v2"
   "scaf/cli/project"
@@ -61,46 +62,7 @@ func AddRepoAction(c *cli.Context) error {
 
 func UpdateRepoAction(c *cli.Context) error {
   // select repo
-  localProject, err := project.GetLocalProject()
-  if err != nil {
-    return err
-  }
-  repoList, ok := localProject["repos"].([]interface{})
-  if !ok {
-    fmt.Println("No repo found")
-    return nil
-  }
-  repoStringList := []string{}
-  for _, repo := range repoList {
-    repoMap, ok := repo.(map[string]interface{})
-    if !ok {
-      continue
-    }
-    repoString := scafio.RepoToString(repoMap)
-    repoStringList = append(repoStringList, repoString)
-  }
-  selectRepoQuestion := &survey.Select{
-    Message: "Select repo to update:",
-    Options: repoStringList,
-  }
-  var selectRepo, selectRepoId, selectRepoName, selectRepoUrl string
-  err = survey.AskOne(selectRepoQuestion, &selectRepo)
-  if err != nil {
-    return err
-  }
-  for _, repo := range repoList {
-    repoMap, ok := repo.(map[string]interface{})
-    if !ok {
-      continue
-    }
-    repoString := scafio.RepoToString(repoMap)
-    if repoString == selectRepo {
-      selectRepoId = repoMap["id"].(string)
-      selectRepoName = repoMap["name"].(string)
-      selectRepoUrl = repoMap["url"].(string)
-      break
-    }
-  }
+  selectRepoMap, err := selectRepo()
   // get input
   questions := []*survey.Question{
     newRepoNameQuestion,
@@ -119,13 +81,64 @@ func UpdateRepoAction(c *cli.Context) error {
     return nil
   }
   if answers.NewRepoName == "" {
-    answers.NewRepoName = selectRepoName
+    answers.NewRepoName = selectRepoMap["name"].(string)
   }
   if answers.NewRepoUrl == "" {
-    answers.NewRepoUrl = selectRepoUrl
+    answers.NewRepoUrl = selectRepoMap["url"].(string)
   }
   // update repo
-  message, err := project.UpdateRepo(selectRepoId, answers.NewRepoName, answers.NewRepoUrl)
+  message, err := project.UpdateRepo(selectRepoMap["id"].(string), answers.NewRepoName, answers.NewRepoUrl)
+  if err != nil {
+    return err
+  }
+  fmt.Println(message)
+  return nil
+}
+
+func selectRepo() (map[string]interface{}, error) {
+  localProject, err := project.GetLocalProject()
+  if err != nil {
+    return nil, err
+  }
+  repoList := localProject["repos"].([]interface{})
+  repoStringList := []string{}
+  for _, repo := range repoList {
+    repoMap, ok := repo.(map[string]interface{})
+    if !ok {
+      continue
+    }
+    repoString := scafio.RepoToString(repoMap)
+    repoStringList = append(repoStringList, repoString)
+  }
+  selectRepoQuestion := &survey.Select{
+    Message: "Select repo:",
+    Options: repoStringList,
+  }
+  var selectRepo string
+  err = survey.AskOne(selectRepoQuestion, &selectRepo)
+  if err != nil {
+    return nil, err
+  }
+  var selectRepoMap map[string]interface{}
+  for _, repo := range repoList {
+    repoMap, ok := repo.(map[string]interface{})
+    if !ok {
+      continue
+    }
+    repoString := scafio.RepoToString(repoMap)
+    if repoString == selectRepo {
+      selectRepoMap = repoMap
+      break
+    }
+  }
+  return selectRepoMap, nil
+}
+
+func DeleteRepoAction(c *cli.Context) error {
+  // select repo
+  selectRepoMap, err := selectRepo()
+  // delete repo
+  message, err := project.DeleteRepo(selectRepoMap["id"].(string))
   if err != nil {
     return err
   }
