@@ -6,7 +6,6 @@ import (
 
   "github.com/urfave/cli/v2"
 
-  "scaf/cli/user"
   "scaf/cli/config"
   "scaf/cli/action"
 )
@@ -19,7 +18,7 @@ func run(args []string) {
       {
         Name:    "user",
         Usage:   "user",
-        Action:  user.GetUserAction,
+        Action:  action.GetUserAction,
       },
       {
         Name:    "signin",
