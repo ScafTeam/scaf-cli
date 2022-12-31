@@ -1,7 +1,9 @@
 package project
 
 import (
+  "errors"
   "log"
+  "os"
   "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
@@ -63,5 +65,57 @@ func createProject(name string, devMode string, devTools []string) (string, erro
     return "", err
   }
 
+  return body["message"].(string), nil
+}
+
+func CloneProjectIntoLocal(email string, name string) (string, error) {
+  log.Println("cloneProjectIntoLocal:", email, name)
+
+  // check if project name folder exists
+  if _, err := os.Stat(name); !os.IsNotExist(err) {
+    return "", errors.New("Project folder already exists")
+  }
+  //check if user have permission to clone project
+  req, err := scafreq.NewRequest(
+    "GET",
+    "/user/" + email + "/project/" + name,
+    nil,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  if resp.StatusCode != 200 {
+    return "", errors.New("Project not found")
+  }
+  // clone project
+  os.MkdirAll(name + "/.scaf", 0777)
+  os.Chdir(name + "/.scaf")
+  req, err = scafreq.NewRequest(
+    "GET",
+    "/user/" + email + "/project/" + name,
+    nil,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err = scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  projectBodyString, err := json.Marshal(body["project"])
+  err = os.WriteFile("project.json", projectBodyString, 0777)
+  if err != nil {
+    return "", err
+  }
   return body["message"].(string), nil
 }

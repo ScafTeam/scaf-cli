@@ -10,6 +10,7 @@ import (
   "scaf/cli/user"
   "scaf/cli/project"
   "scaf/cli/config"
+  "scaf/cli/action"
 )
 
 func run(args []string) {
@@ -84,11 +85,16 @@ func run(args []string) {
             Usage:   "create a new project",
             Action:  project.CreateProjectAction,
           },
+          {
+            Name:    "clone",
+            Usage:   "clone a project",
+            Action:  action.CloneProjectAction,
+          },
         },
       },
       {
         Name:    "repo",
-        Usage:   "manage repositories",
+        Usage:   "manage code repositories",
         Action:  notImplemented,
       },
       {
