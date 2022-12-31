@@ -63,7 +63,7 @@ func CreateProject(name string, devMode string, devTools []string) (string, erro
   if err != nil {
     return "", err
   }
-  if resp.StatusCode != 200 {
+  if resp.StatusCode != 201 {
     return "", errors.New("Failed to create project")
   }
   defer resp.Body.Close()
