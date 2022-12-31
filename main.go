@@ -84,6 +84,11 @@ func run(args []string) {
             Usage:   "clone a project",
             Action:  action.CloneProjectAction,
           },
+          {
+            Name:    "pull",
+            Usage:   "pull a project",
+            Action:  action.PullProjectAction,
+          },
         },
       },
       {

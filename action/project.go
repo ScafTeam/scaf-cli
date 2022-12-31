@@ -89,3 +89,12 @@ func CloneProjectAction(c *cli.Context) error {
   fmt.Println(message)
   return nil
 }
+
+func PullProjectAction(c *cli.Context) error {
+  message, err := project.PullProjectFromRemote()
+  if err != nil {
+    return err
+  }
+  fmt.Println(message)
+  return nil
+}
