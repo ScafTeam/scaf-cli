@@ -3,10 +3,7 @@ package main
 import (
   "log"
   "os"
-
   "github.com/urfave/cli/v2"
-
-  "scaf/cli/config"
   "scaf/cli/action"
 )
 
@@ -48,17 +45,17 @@ func run(args []string) {
           {
             Name:    "set",
             Usage:   "set config",
-            Action:  config.SetConfigAction,
+            Action:  action.SetConfigAction,
           },
           {
             Name:    "get",
             Usage:   "get config",
-            Action:  config.GetConfigAction,
+            Action:  action.GetConfigAction,
           },
           {
             Name:    "password",
             Usage:   "change password",
-            Action:  config.ChangePasswordAction,
+            Action:  action.ChangePasswordAction,
           },
         },
       },
