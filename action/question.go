@@ -6,6 +6,7 @@ import (
   "scaf/cli/config"
 )
 
+// user questions
 var (
   emailQuestion = &survey.Question{
     Name: "Email",
@@ -62,6 +63,7 @@ var (
   }
 )
 
+// config questions
 var (
   configCategoryQuestion = &survey.Question{
     Name: "Category",
@@ -90,6 +92,24 @@ var (
     Prompt: &survey.Select{
       Message: "Please select your value:",
       Options: []string{"true", "false"},
+    },
+    Validate: survey.Required,
+  }
+)
+
+// repo questions
+var (
+  repoNameQuestion = &survey.Question{
+    Name: "RepoName",
+    Prompt: &survey.Input{
+      Message: "Please input repo name:",
+    },
+    Validate: survey.Required,
+  }
+  repoUrlQuestion = &survey.Question{
+    Name: "RepoUrl",
+    Prompt: &survey.Input{
+      Message: "Please input repo url:",
     },
     Validate: survey.Required,
   }

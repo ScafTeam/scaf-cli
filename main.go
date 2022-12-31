@@ -72,7 +72,7 @@ func run(args []string) {
                 Usage: "print oneline",
               },
             },
-            Action:  action.ListProjectsAction,
+            Action:  action.ListProjectAction,
           },
           {
             Name:    "create",
@@ -94,7 +94,13 @@ func run(args []string) {
       {
         Name:    "repo",
         Usage:   "manage code repositories",
-        Action:  notImplemented,
+        Subcommands: []*cli.Command{
+          {
+            Name:    "list",
+            Usage:   "list repositories",
+            Action:  action.ListRepoAction,
+          },
+        },
       },
       {
         Name:    "doc",

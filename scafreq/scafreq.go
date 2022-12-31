@@ -57,7 +57,7 @@ func DoRequest(req *http.Request) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  log.Println("DoRequest: ", req.Method, req.URL)
+  log.Println("DoRequest: ", req.Method, req.URL, req.Body)
   resp, err := client.Do(req)
   if err != nil {
     return nil, err

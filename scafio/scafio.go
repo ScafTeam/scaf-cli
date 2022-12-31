@@ -7,31 +7,7 @@ import (
   "encoding/json"
   "io"
   "bytes"
-  "github.com/AlecAivazis/survey/v2"
   "github.com/urfave/cli/v2"
-)
-
-var (
-  EmailQuestion = &survey.Question{
-    Name: "Email",
-    Prompt: &survey.Input{ Message: "Please input email:" },
-    Validate: survey.Required,
-  }
-  PasswordQuestion = &survey.Question{
-    Name: "Password",
-    Prompt: &survey.Password{ Message: "Please input your password:" },
-    Validate: survey.Required,
-  }
-  PasswordConfirmQuestion = &survey.Question{
-    Name: "PasswordConfirm",
-    Prompt: &survey.Password{ Message: "Please confirm your password:" },
-    Validate: survey.Required,
-  }
-  ProjectNameQuestion = &survey.Question{
-    Name: "ProjectName",
-    Prompt: &survey.Input{ Message: "Please input your project name:" },
-    Validate: survey.Required,
-  }
 )
 
 func GetArg(c *cli.Context, index int) (string, error) {
@@ -52,6 +28,10 @@ func PrintProject(projectMap map[string]interface{}, oneline bool) {
     }
     fmt.Println()
   }
+}
+
+func PrintRepo(repoMap map[string]interface{}) {
+  fmt.Printf("* %v - %v (%v)\n", repoMap["id"], repoMap["name"], repoMap["url"])
 }
 
 // read json format response body and return a map

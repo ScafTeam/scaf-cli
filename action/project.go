@@ -8,7 +8,7 @@ import (
   "scaf/cli/project"
 )
 
-func ListProjectsAction(c *cli.Context) error {
+func ListProjectAction(c *cli.Context) error {
   var err error
   questions := []*survey.Question{}
   answers := struct {
