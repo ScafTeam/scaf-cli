@@ -3,6 +3,7 @@ package action
 import (
   "fmt"
   "github.com/urfave/cli/v2"
+  "github.com/AlecAivazis/survey/v2"
   "scaf/cli/project"
   "scaf/cli/scafio"
 )
@@ -23,30 +24,37 @@ func ListRepoAction(c *cli.Context) error {
     if !ok {
       continue
     }
-    scafio.PrintRepo(repoMap)
+    repoString := scafio.RepoToString(repoMap)
+    fmt.Println(repoString)
   }
   return nil
 }
 
-// func AddRepoAction(c * cli.Context) error {
-//   // get input
-//   var err error
-//   questions := []*survey.Question{}
-//   answers := struct {
-//     RepoName string
-//     RepoUrl string
-//   }{}
-//   answers.RepoName, err = scafio.GetArg(c, 0)
-//   if err != nil {
-//     questions = append(questions, repoNameQuestion)
-//   }
-//   answers.RepoUrl, err = scafio.GetArg(c, 1)
-//   if err != nil {
-//     questions = append(questions, repoUrlQuestion)
-//   }
-//   err = survey.Ask(questions, &answers)
-//   if err != nil {
-//     return err
-//   }
-//   // add repo
-//   message, err := project.AddRepo(answers.RepoName, answers.RepoUrl)
+func AddRepoAction(c *cli.Context) error {
+  // get input
+  var err error
+  questions := []*survey.Question{}
+  answers := struct {
+    RepoName string
+    RepoUrl string
+  }{}
+  answers.RepoName, err = scafio.GetArg(c, 0)
+  if err != nil {
+    questions = append(questions, repoNameQuestion)
+  }
+  answers.RepoUrl, err = scafio.GetArg(c, 1)
+  if err != nil {
+    questions = append(questions, repoUrlQuestion)
+  }
+  err = survey.Ask(questions, &answers)
+  if err != nil {
+    return err
+  }
+  // add repo
+  message, err := project.AddRepo(answers.RepoName, answers.RepoUrl)
+  if err != nil {
+    return err
+  }
+  fmt.Println(message)
+  return nil
+}

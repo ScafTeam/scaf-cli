@@ -30,8 +30,8 @@ func PrintProject(projectMap map[string]interface{}, oneline bool) {
   }
 }
 
-func PrintRepo(repoMap map[string]interface{}) {
-  fmt.Printf("* %v - %v (%v)\n", repoMap["id"], repoMap["name"], repoMap["url"])
+func RepoToString(repoMap map[string]interface{}) string {
+  return fmt.Sprintf("* %v - %v (%v)", repoMap["id"], repoMap["name"], repoMap["url"])
 }
 
 // read json format response body and return a map

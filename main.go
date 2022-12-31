@@ -100,6 +100,11 @@ func run(args []string) {
             Usage:   "list repositories",
             Action:  action.ListRepoAction,
           },
+          {
+            Name:    "add",
+            Usage:   "add a repository",
+            Action:  action.AddRepoAction,
+          },
         },
       },
       {
