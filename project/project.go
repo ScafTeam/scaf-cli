@@ -33,7 +33,11 @@ func GetProjects(email string) ([]interface{}, error) {
 
 func CreateProject(name string, devMode string, devTools []string) (string, error) {
   log.Println("createProject:", name, devMode, devTools)
-
+  // check if project name folder exists
+  if _, err := os.Stat(name); !os.IsNotExist(err) {
+    return "", errors.New("Project folder already exists")
+  }
+  // create project to remote
   createProjectRequest := map[string]interface{}{
     "name": name,
     "devMode": devMode,
@@ -59,8 +63,16 @@ func CreateProject(name string, devMode string, devTools []string) (string, erro
   if err != nil {
     return "", err
   }
+  if resp.StatusCode != 200 {
+    return "", errors.New("Failed to create project")
+  }
   defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  // clone project
+  _, err = CloneProjectIntoLocal(email, name)
   if err != nil {
     return "", err
   }
@@ -95,24 +107,14 @@ func CloneProjectIntoLocal(email string, name string) (string, error) {
   // clone project
   os.MkdirAll(name + "/.scaf", 0777)
   os.Chdir(name + "/.scaf")
-  req, err = scafreq.NewRequest(
-    "GET",
-    "/user/" + email + "/project/" + name,
-    nil,
-  )
-  if err != nil {
-    return "", err
-  }
-  resp, err = scafreq.DoRequest(req)
-  if err != nil {
-    return "", err
-  }
-  defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
   if err != nil {
     return "", err
   }
   projectBodyString, err := json.Marshal(body["project"])
+  if err != nil {
+    return "", err
+  }
   err = os.WriteFile("project.json", projectBodyString, 0777)
   if err != nil {
     return "", err
