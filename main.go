@@ -8,7 +8,6 @@ import (
 
   "scaf/cli/auth"
   "scaf/cli/user"
-  "scaf/cli/project"
   "scaf/cli/config"
   "scaf/cli/action"
 )
@@ -78,12 +77,12 @@ func run(args []string) {
                 Usage: "print oneline",
               },
             },
-            Action:  project.ListProjectsAction,
+            Action:  action.ListProjectsAction,
           },
           {
             Name:    "create",
             Usage:   "create a new project",
-            Action:  project.CreateProjectAction,
+            Action:  action.CreateProjectAction,
           },
           {
             Name:    "clone",

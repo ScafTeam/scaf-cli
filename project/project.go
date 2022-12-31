@@ -9,7 +9,7 @@ import (
   "scaf/cli/scafreq"
 )
 
-func getProjects(email string) ([]interface{}, error) {
+func GetProjects(email string) ([]interface{}, error) {
   log.Println("getProjects:", email)
 
   req, err := scafreq.NewRequest("GET", "/user/" + email + "/project", nil)
@@ -31,7 +31,7 @@ func getProjects(email string) ([]interface{}, error) {
   return body["projects"].([]interface{}), nil
 }
 
-func createProject(name string, devMode string, devTools []string) (string, error) {
+func CreateProject(name string, devMode string, devTools []string) (string, error) {
   log.Println("createProject:", name, devMode, devTools)
 
   createProjectRequest := map[string]interface{}{
