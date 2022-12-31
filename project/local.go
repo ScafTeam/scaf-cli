@@ -135,3 +135,56 @@ func AddRepo(repoName, repoUrl string) (string, error) {
   }
   return body["message"].(string), nil
 }
+
+func UpdateRepo(repoId, repoName, repoUrl string) (string, error) {
+  log.Println("updateRepo:", repoId, repoName, repoUrl)
+  // get local project
+  localProject, err := GetLocalProject()
+  if err != nil {
+    return "", err
+  }
+  projectAuthor, ok := localProject["author"].(string)
+  if !ok {
+    return "", errors.New("Project author not found")
+  }
+  projectName, ok := localProject["name"].(string)
+  if !ok {
+    return "", errors.New("Project name not found")
+  }
+  // update repo
+  updateRepoReqBody := map[string]interface{}{
+    "id": repoId,
+    "name": repoName,
+    "url": repoUrl,
+  }
+  updateRepoReqBodyString, err := json.Marshal(updateRepoReqBody)
+  if err != nil {
+    return "", err
+  }
+  req, err := scafreq.NewRequest(
+    "PUT",
+    "/user/" + projectAuthor + "/project/" + projectName + "/repo",
+    updateRepoReqBodyString,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  if resp.StatusCode != 200 {
+    return "", errors.New("Failed to update repo")
+  }
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  // update local project
+  _, err = PullProjectFromRemote()
+  if err != nil {
+    return "", err
+  }
+  return body["message"].(string), nil
+}

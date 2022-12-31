@@ -113,4 +113,16 @@ var (
     },
     Validate: survey.Required,
   }
+  newRepoNameQuestion = &survey.Question{
+    Name: "NewRepoName",
+    Prompt: &survey.Input{
+      Message: "Please input new repo name (empty to keep the same):",
+    },
+  }
+  newRepoUrlQuestion = &survey.Question{
+    Name: "NewRepoUrl",
+    Prompt: &survey.Input{
+      Message: "Please input new repo url (empty to keep the same):",
+    },
+  }
 )

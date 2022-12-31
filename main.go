@@ -105,6 +105,11 @@ func run(args []string) {
             Usage:   "add a repository",
             Action:  action.AddRepoAction,
           },
+          {
+            Name:    "update",
+            Usage:   "update a repository",
+            Action:  action.UpdateRepoAction,
+          },
         },
       },
       {
