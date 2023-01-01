@@ -92,6 +92,14 @@ select a repo to delete it
 
 ---
 
+### Kanban (inside project folder)
+
+#### `scaf kanban list [--oneline] [board name]`
+
+list all kanban boards
+if board name is specified, show only that kanban
+`--oneline` will compress output
+
 ## Run source code
 
 go version must over 1.11

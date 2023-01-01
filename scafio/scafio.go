@@ -34,6 +34,22 @@ func RepoToString(repoMap map[string]interface{}) string {
   return fmt.Sprintf("* %v - %v (%v)", repoMap["id"], repoMap["name"], repoMap["url"])
 }
 
+func WorkflowToString(workflowMap map[string]interface{}, oneline bool) string {
+  if oneline {
+    return fmt.Sprintf("* %v - %v (%v tasks)",
+      workflowMap["id"],
+      workflowMap["name"],
+      len(workflowMap["tasks"].([]interface{})),
+    )
+  } else {
+    return fmt.Sprintf("* %v\n  name: %v\n  tasks: %v\n",
+      workflowMap["id"],
+      workflowMap["name"],
+      workflowMap["tasks"],
+    )
+  }
+}
+
 // read json format response body and return a map
 // then restore response body (can be read again)
 func ReadBody(resp *http.Response) (map[string]interface{}, error) {

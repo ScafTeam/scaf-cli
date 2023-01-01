@@ -125,7 +125,19 @@ func run(args []string) {
       {
         Name:    "kanban",
         Usage:   "manage kanban boards",
-        Action:  notImplemented,
+        Subcommands: []*cli.Command{
+          {
+            Name:    "list",
+            Usage:   "list kanban boards",
+            Action:  action.ListWorkflowAction,
+            Flags: []cli.Flag{
+              &cli.BoolFlag{
+                Name:  "oneline",
+                Usage: "print oneline",
+              },
+            },
+          },
+        },
       },
       {
         Name:    "qa",
