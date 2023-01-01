@@ -80,6 +80,11 @@ func run(args []string) {
             Action:  action.CreateProjectAction,
           },
           {
+            Name:    "delete",
+            Usage:   "delete a project",
+            Action:  action.DeleteProjectAction,
+          },
+          {
             Name:    "clone",
             Usage:   "clone a project",
             Action:  action.CloneProjectAction,

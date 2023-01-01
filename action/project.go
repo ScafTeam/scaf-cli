@@ -63,6 +63,28 @@ func CreateProjectAction(c *cli.Context) error {
   return nil
 }
 
+func DeleteProjectAction(c *cli.Context) error {
+  var err error
+  questions := []*survey.Question{}
+  answers := struct {
+    ProjectName string
+  }{}
+  answers.ProjectName, err = scafio.GetArg(c, 0)
+  if err != nil {
+    questions = append(questions, projectNameQuestion)
+  }
+  err = survey.Ask(questions, &answers)
+  if err != nil {
+    return err
+  }
+  message, err := project.DeleteProject(answers.ProjectName)
+  if err != nil {
+    return err
+  }
+  fmt.Println(message)
+  return nil
+}
+
 func CloneProjectAction(c *cli.Context) error {
   var err error
   questions := []*survey.Question{}

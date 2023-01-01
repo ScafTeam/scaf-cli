@@ -80,6 +80,37 @@ func CreateProject(name string, devMode string, devTools []string) (string, erro
   return body["message"].(string), nil
 }
 
+func DeleteProject(name string) (string, error) {
+  log.Println("deleteProject:", name)
+  // delete project from remote
+  email, err := scafreq.LoadCookieValue("email")
+  if err != nil {
+    return "", err
+  }
+  req, err := scafreq.NewRequest(
+    "DELETE",
+    "/user/" + email + "/project/" + name,
+    nil,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  if resp.StatusCode != 200 {
+    return "", errors.New("Failed to delete project")
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+
+  return body["message"].(string), nil
+}
+
 func CloneProjectIntoLocal(email string, name string) (string, error) {
   log.Println("cloneProjectIntoLocal:", email, name)
 
