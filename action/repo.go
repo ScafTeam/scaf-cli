@@ -2,7 +2,6 @@ package action
 
 import (
   "fmt"
-  "errors"
   "github.com/urfave/cli/v2"
   "github.com/AlecAivazis/survey/v2"
   "scaf/cli/project"
