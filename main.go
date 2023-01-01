@@ -142,6 +142,11 @@ func run(args []string) {
               },
             },
           },
+          {
+            Name:    "add",
+            Usage:   "add a kanban board",
+            Action:  action.AddWorkflowAction,
+          },
         },
       },
       {

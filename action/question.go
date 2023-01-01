@@ -126,3 +126,14 @@ var (
     },
   }
 )
+
+// workflow questions
+var (
+  workflowNameQuestion = &survey.Question{
+    Name: "WorkflowName",
+    Prompt: &survey.Input{
+      Message: "Please input board name:",
+    },
+    Validate: survey.Required,
+  }
+)

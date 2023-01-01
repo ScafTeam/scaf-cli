@@ -1,6 +1,7 @@
 package project
 
 import (
+  "encoding/json"
   "log"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
@@ -30,12 +31,29 @@ func GetWorkflows(projectAuthor string, projectName string) ([]interface{}, erro
   return kanban["workflows"].([]interface{}), nil
 }
 
-// func AddWorkflow(workflowName string) (string, error) {
-//   log.Println("addWorkflow:", workflowName)
-//   // get local project
-//   localProject, err := GetLocalProject()
-//   if err != nil {
-//     return "", err
-//   }
-//   projectAuthor := localProject["author"].(string)
-//   projectName := localProject["name"].(string)
+func AddWorkflow(projectAuthor, projectName, workflowName string) (string, error) {
+  log.Println("addWorkflow:", projectAuthor, projectName, workflowName)
+  // add workflow
+  addWorkflowReq := map[string]interface{}{
+    "name": workflowName,
+  }
+  addWorkflowReqJson, err := json.Marshal(addWorkflowReq)
+  req, err := scafreq.NewRequest(
+    "POST",
+    "/user/" + projectAuthor + "/project/" + projectName + "/kanban",
+    addWorkflowReqJson,
+  )
+  if err != nil {
+    return "", err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return "", err
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return "", err
+  }
+  return body["message"].(string), nil
+}
