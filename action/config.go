@@ -13,45 +13,63 @@ import (
 func SetConfigAction(c *cli.Context) error {
   // get config input
   var err error
-  questions := []*survey.Question{}
   answers := struct {
-    Category string
-    Field    string
-    Value    string
+    Category  string
+    Field     string
+    Value     string
+    ValueList []string
   }{}
   answers.Category, err = scafio.GetArg(c, 0)
   if err != nil {
-    questions = append(questions, configCategoryQuestion)
+    if prompt, err := config.GetCategoryPrompt(); err != nil {
+      return err
+    } else {
+      err = survey.AskOne(prompt, &answers.Category)
+      if err != nil {
+        return err
+      }
+    }
   }
   answers.Field, err = scafio.GetArg(c, 1)
   if err != nil {
-    questions = append(questions, configFieldQuestion)
+    if prompt, err := config.GetFieldPrompt(answers.Category); err != nil {
+      return err
+    } else {
+      err = survey.AskOne(prompt, &answers.Field)
+      if err != nil {
+        return err
+      }
+    }
   }
   answers.Value, err = scafio.GetArg(c, 2)
+  var message string
   if err != nil {
-    questions = append(questions, valueQuestion)
-  }
-  err = survey.Ask(questions, &answers)
-  if err != nil {
-    return err
+    if prompt, err := config.GetValuePrompt(answers.Category, answers.Field); err != nil {
+      return err
+    } else {
+      switch v := prompt.(type) {
+      case *survey.MultiSelect:
+        err = survey.AskOne(v, &answers.ValueList)
+        if err != nil {
+          return err
+        }
+        message, err = config.SetConfig(answers.Category, answers.Field, answers.ValueList)
+        if err != nil {
+          return err
+        }
+      default:
+        err = survey.AskOne(v, &answers.Value)
+        if err != nil {
+          return err
+        }
+        message, err = config.SetConfig(answers.Category, answers.Field, answers.Value)
+        if err != nil {
+          return err
+        }
+      }
+    }
   }
   // set config
-  var message string
-  switch answers.Category {
-  case config.User:
-    message, err = user.UpdateUser(map[string]interface{}{
-      answers.Field: answers.Value,
-    })
-  // case config.Project:
-  //   message, err = project.UpdateProject(map[string]interface{}{
-  //     answers.Field: answers.Value,
-  //   })
-  default:
-    err = fmt.Errorf("Invalid category: %s", answers.Category)
-  }
-  if err != nil {
-    return err
-  }
   fmt.Println(message)
   return nil
 }

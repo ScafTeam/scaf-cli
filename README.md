@@ -39,6 +39,8 @@ show current signed in user
 #### `scaf config set <category> <field> <value>`
 
 update config
+have `user` and `project` two field
+can add/delete project member
 
 #### `scaf config get <category> <field>`
 

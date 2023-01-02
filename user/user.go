@@ -10,7 +10,6 @@ import (
 
 func GetUser(email string) (map[string]interface{}, error) {
   log.Println("getUser:", email)
-
   req, err := scafreq.NewRequest("GET", "/user/" + email, nil)
   if err != nil {
     return nil, err
@@ -25,7 +24,6 @@ func GetUser(email string) (map[string]interface{}, error) {
   if err != nil {
     return nil, err
   }
-
   userData, ok := body["data"].(map[string]interface{})
   if !ok {
     message, ok := body["message"].(string)
@@ -39,7 +37,6 @@ func GetUser(email string) (map[string]interface{}, error) {
 
 func UpdateUser(data map[string]interface{}) (string, error) {
   log.Println("updateUser:", data)
-
   updateUserRequestJSON, err := json.Marshal(data)
   if err != nil {
     return "", err

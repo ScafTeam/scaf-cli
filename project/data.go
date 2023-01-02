@@ -12,7 +12,6 @@ var DevModes = []string{
   Scrum,
 }
 
-
 // dev tools constants
 type DevToolType string
 const (

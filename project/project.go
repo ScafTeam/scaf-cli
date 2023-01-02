@@ -11,7 +11,6 @@ import (
 
 func GetProjects(email string) ([]interface{}, error) {
   log.Println("getProjects:", email)
-
   req, err := scafreq.NewRequest("GET", "/user/" + email + "/project", nil)
   if err != nil {
     return nil, err
@@ -27,7 +26,6 @@ func GetProjects(email string) ([]interface{}, error) {
   }
   // bodyIndent, err := json.MarshalIndent(body, "", "  ")
   // log.Println(string(bodyIndent))
-
   return body["projects"].([]interface{}), nil
 }
 
@@ -76,7 +74,6 @@ func CreateProject(name string, devMode string, devTools []string) (string, erro
   if err != nil {
     return "", err
   }
-
   return body["message"].(string), nil
 }
 
@@ -107,13 +104,11 @@ func DeleteProject(name string) (string, error) {
   if err != nil {
     return "", err
   }
-
   return body["message"].(string), nil
 }
 
 func CloneProjectIntoLocal(email string, name string) (string, error) {
   log.Println("cloneProjectIntoLocal:", email, name)
-
   // check if project name folder exists
   if _, err := os.Stat(name); !os.IsNotExist(err) {
     return "", errors.New("Project folder already exists")
