@@ -36,10 +36,17 @@ func RepoToString(repoMap map[string]interface{}) string {
 
 func WorkflowToString(workflowMap map[string]interface{}, oneline bool) string {
   if oneline {
+    var tasksLength int
+    tasks, ok := workflowMap["tasks"].([]interface{})
+    if !ok {
+      tasksLength = 0
+    } else {
+      tasksLength = len(tasks)
+    }
     return fmt.Sprintf("* %v - %v (%v tasks)",
       workflowMap["id"],
       workflowMap["name"],
-      len(workflowMap["tasks"].([]interface{})),
+      tasksLength,
     )
   } else {
     return fmt.Sprintf("* %v\n  name: %v\n  tasks: %v\n",

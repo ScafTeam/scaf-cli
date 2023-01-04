@@ -125,7 +125,28 @@ func run(args []string) {
       {
         Name:    "doc",
         Usage:   "manage documents",
-        Action:  notImplemented,
+        Subcommands: []*cli.Command{
+          {
+            Name:    "list",
+            Usage:   "list documents",
+            Action:  notImplemented,
+          },
+          {
+            Name:    "add",
+            Usage:   "add a document",
+            Action:  notImplemented,
+          },
+          {
+            Name:    "update",
+            Usage:   "update a document",
+            Action:  notImplemented,
+          },
+          {
+            Name:    "delete",
+            Usage:   "delete a document",
+            Action:  notImplemented,
+          },
+        },
       },
       {
         Name:    "kanban",
@@ -146,6 +167,42 @@ func run(args []string) {
             Name:    "add",
             Usage:   "add a kanban board",
             Action:  action.AddWorkflowAction,
+          },
+          {
+            Name:    "update",
+            Usage:   "update a kanban board",
+            Action:  action.UpdateWorkflowAction,
+          },
+          {
+            Name:    "delete",
+            Usage:   "delete a kanban board",
+            Action:  action.DeleteWorkflowAction,
+          },
+          {
+            Name:    "task",
+            Usage:   "manage tasks",
+            Subcommands: []*cli.Command{
+              {
+                Name:    "add",
+                Usage:   "add a task",
+                Action:  notImplemented,
+              },
+              {
+                Name:    "update",
+                Usage:   "update a task",
+                Action:  notImplemented,
+              },
+              {
+                Name:    "delete",
+                Usage:   "delete a task",
+                Action:  notImplemented,
+              },
+              {
+                Name:    "move",
+                Usage:   "move a task",
+                Action:  notImplemented,
+              },
+            },
           },
         },
       },
