@@ -87,6 +87,10 @@ list all repo in project
 
 add a repo into project
 
+#### `scaf repo pull`
+
+select a repo and pull it into local
+
 #### `scaf repo update`
 
 select a repo to update it data

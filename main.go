@@ -120,6 +120,11 @@ func run(args []string) {
             Usage:   "delete a repository",
             Action:  action.DeleteRepoAction,
           },
+          {
+            Name:    "pull",
+            Usage:   "pull repository",
+            Action:  action.PullRepoAction,
+          },
         },
       },
       {

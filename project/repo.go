@@ -1,6 +1,7 @@
 package project
 
 import (
+  "os/exec"
   "errors"
   "log"
   "encoding/json"
@@ -145,4 +146,30 @@ func DeleteRepo(repoId string) (string, error) {
     return "", err
   }
   return body["message"].(string), nil
+}
+
+func PullRepo(repoId string) (string, error) {
+  log.Println("pullRepo:", repoId)
+  // get local project
+  localProject, err := GetLocalProject()
+  if err != nil {
+    return "", err
+  }
+  repoList := localProject["repos"].([]interface{})
+  var repo map[string]interface{}
+  for _, repoItem := range repoList {
+    repoItemMap, ok := repoItem.(map[string]interface{})
+    if !ok {
+      continue
+    }
+    if repoItemMap["id"].(string) == repoId {
+      repo = repoItemMap
+      break
+    }
+  } 
+  out, err := exec.Command("git", "clone", repo["url"].(string)).CombinedOutput()
+  if err != nil {
+    return "", err
+  }
+  return string(out), nil
 }

@@ -144,3 +144,15 @@ func DeleteRepoAction(c *cli.Context) error {
   fmt.Println(message)
   return nil
 }
+
+func PullRepoAction(c *cli.Context) error {
+  // select repo
+  selectRepoMap, err := selectRepo()
+  // pull repo
+  message, err := project.PullRepo(selectRepoMap["id"].(string))
+  if err != nil {
+    return err
+  }
+  fmt.Println(message)
+  return nil
+}
