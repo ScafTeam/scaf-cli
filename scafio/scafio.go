@@ -57,6 +57,18 @@ func WorkflowToString(workflowMap map[string]interface{}, oneline bool) string {
   }
 }
 
+func TaskToString(taskMap map[string]interface{}, oneline bool) string {
+  if oneline {
+    return fmt.Sprintf("* %v - %v", taskMap["id"], taskMap["name"])
+  } else {
+    return fmt.Sprintf("* %v\n  name: %v\n  description: %v\n",
+      taskMap["id"],
+      taskMap["name"],
+      taskMap["description"],
+    )
+  }
+}
+
 // read json format response body and return a map
 // then restore response body (can be read again)
 func ReadBody(resp *http.Response) (map[string]interface{}, error) {

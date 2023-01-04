@@ -183,24 +183,35 @@ func run(args []string) {
             Usage:   "manage tasks",
             Subcommands: []*cli.Command{
               {
+                Name:    "list",
+                Usage:   "list tasks",
+                Action:  action.ListTaskAction,
+                Flags: []cli.Flag{
+                  &cli.BoolFlag{
+                    Name:  "oneline",
+                    Usage: "print oneline",
+                  },
+                },
+              },
+              {
                 Name:    "add",
                 Usage:   "add a task",
-                Action:  notImplemented,
+                Action:  action.AddTaskAction,
               },
               {
                 Name:    "update",
                 Usage:   "update a task",
-                Action:  notImplemented,
+                Action:  action.UpdateTaskAction,
               },
               {
                 Name:    "delete",
                 Usage:   "delete a task",
-                Action:  notImplemented,
+                Action:  action.DeleteTaskAction,
               },
               {
                 Name:    "move",
                 Usage:   "move a task",
-                Action:  notImplemented,
+                Action:  action.MoveTaskAction,
               },
             },
           },
