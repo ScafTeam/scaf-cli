@@ -127,24 +127,24 @@ func run(args []string) {
         Usage:   "manage documents",
         Subcommands: []*cli.Command{
           {
-            Name:    "list",
-            Usage:   "list documents",
-            Action:  notImplemented,
+            Name:    "show",
+            Usage:   "show documents",
+            Action:  action.ShowDocAction,
           },
           {
             Name:    "add",
             Usage:   "add a document",
-            Action:  notImplemented,
+            Action:  action.AddDocAction,
           },
           {
             Name:    "update",
             Usage:   "update a document",
-            Action:  notImplemented,
+            Action:  action.UpdateDocAction,
           },
           {
             Name:    "delete",
             Usage:   "delete a document",
-            Action:  notImplemented,
+            Action:  action.DeleteDocAction,
           },
         },
       },

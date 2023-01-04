@@ -69,6 +69,18 @@ func TaskToString(taskMap map[string]interface{}, oneline bool) string {
   }
 }
 
+func DocToString(docMap map[string]interface{}, oneline bool) string {
+  if oneline {
+    return fmt.Sprintf("* %v - %v", docMap["id"], docMap["title"])
+  } else {
+    return fmt.Sprintf("* %v\n  title: %v\n==========\n%v\n==========\n",
+      docMap["id"],
+      docMap["title"],
+      docMap["content"],
+    )
+  }
+}
+
 // read json format response body and return a map
 // then restore response body (can be read again)
 func ReadBody(resp *http.Response) (map[string]interface{}, error) {
