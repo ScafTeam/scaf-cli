@@ -152,7 +152,7 @@ func run(args []string) {
       {
         Name:    "qa",
         Usage:   "show Q&A",
-        Action:  notImplemented,
+        Action:  action.ShowQAAction,
       },
       {
         Name:    "whoami",
