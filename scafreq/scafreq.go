@@ -1,6 +1,7 @@
 package scafreq
 
 import (
+  "log"
   "net/http"
   "net/http/cookiejar"
   "os"
@@ -38,6 +39,10 @@ func GetClient() (*http.Client, error) {
 }
 
 func NewRequest(method string, path string, body []byte) (*http.Request, error) {
+  if path[len(path)-1] != '/' {
+    path += "/"
+  }
+  log.Printf(os.Getenv("SCAF_BACKEND_URL") + path)
   req, err := http.NewRequest(
     method,
     os.Getenv("SCAF_BACKEND_URL") + path,

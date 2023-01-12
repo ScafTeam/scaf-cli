@@ -103,6 +103,10 @@ func getUserValuePrompt(field string) (survey.Prompt, error) {
 
 func getProjectValuePrompt(field string) (survey.Prompt, error) {
   switch field {
+  case Name:
+    return &survey.Input{
+      Message: "Enter New Project Name:",
+    }, nil
   case DevMode:
     return &survey.Select{
       Message: "Select a dev mode:",
