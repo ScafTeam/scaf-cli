@@ -3,7 +3,6 @@ package project
 import (
   "errors"
   "os"
-  "log"
   "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
@@ -11,7 +10,6 @@ import (
 
 // guarantee that the project has author and name
 func GetLocalProject() (map[string]interface{}, error) {
-  log.Println("getLocalProject")
   // check if project name folder exists
   if _, err := os.Stat(".scaf"); os.IsNotExist(err) {
     return nil, errors.New("Project folder not found")
@@ -41,7 +39,6 @@ func GetLocalProject() (map[string]interface{}, error) {
 }
 
 func PullProjectFromRemote() (string, error) {
-  log.Println("pullProjectFromRemote")
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -84,7 +81,6 @@ func PullProjectFromRemote() (string, error) {
 }
 
 func GetMembers() ([]interface{}, error) {
-  log.Println("getMembers")
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -117,7 +113,6 @@ func GetMembers() ([]interface{}, error) {
 }
 
 func AddMember(member string) (string, error) {
-  log.Println("AddMember")
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -153,7 +148,6 @@ func AddMember(member string) (string, error) {
 }
 
 func DeleteMember(member string) (string, error) {
-  log.Println("DeleteMember")
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -189,7 +183,6 @@ func DeleteMember(member string) (string, error) {
 }
 
 func UpdateLocalProject(data map[string]interface{}) (string, error) {
-  log.Println("updateLocalProject")
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {

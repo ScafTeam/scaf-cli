@@ -2,7 +2,6 @@ package action
 
 import (
   "fmt"
-  "log"
   "github.com/urfave/cli/v2"
   "github.com/AlecAivazis/survey/v2"
   "scaf/cli/scafio"
@@ -110,7 +109,6 @@ func SignOutAction(c *cli.Context) error {
 func WhoamiAction(c *cli.Context) error {
   message, err := auth.Whoami()
   if err != nil {
-    log.Println(err)
   }
   fmt.Println(message)
   return nil

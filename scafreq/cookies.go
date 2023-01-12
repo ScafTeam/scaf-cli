@@ -1,7 +1,6 @@
 package scafreq
 
 import (
-  "log"
   "os"
   "net/http"
   "encoding/json"
@@ -56,14 +55,12 @@ func SaveCookies(new_cookies []*http.Cookie) error {
     var found bool = false
     for i, c := range cookies {
       if c.Name == cookie.Name {
-        log.Println("SaveCookies: update cookie", cookie.Name)
         cookies[i] = cookie
         found = true
         break
       }
     }
     if !found {
-      log.Println("SaveCookies: add cookie", cookie.Name)
       cookies = append(cookies, cookie)
     }
   }
@@ -99,7 +96,6 @@ func DeleteCookies(names []string) error {
     var found bool = false
     for _, name := range names {
       if cookie.Name == name {
-        log.Println("DeleteCookie: delete cookie", cookie.Name)
         found = true
         break
       }

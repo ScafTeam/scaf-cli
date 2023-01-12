@@ -1,7 +1,6 @@
 package main
 
 import (
-  "log"
   "os"
   "github.com/urfave/cli/v2"
   "scaf/cli/action"
@@ -236,14 +235,12 @@ func run(args []string) {
   }
 
   if err := app.Run(args); err != nil {
-    log.Fatal(err)
   }
 }
 
 func main() {
   // os.Setenv("SCAF_BACKEND_URL", "http://localhost:8000")
   if _, ok := os.LookupEnv("SCAF_BACKEND_URL"); !ok {
-    log.Fatal("SCAF_BACKEND_URL is not set, please set it to the backend url\non Linux/MacOS, you can use 'export SCAF_BACKEND_URL=http://localhost:8000'\non Windows, you can use 'set SCAF_BACKEND_URL=http://localhost:8000'")
   }
   home_dir, _ := os.UserHomeDir()
   os.Setenv("SCAF_CONFIG_DIR", home_dir + "/.scaf")

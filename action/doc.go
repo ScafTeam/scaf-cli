@@ -2,7 +2,6 @@ package action
 
 import (
   "errors"
-  "log"
   "fmt"
   "github.com/urfave/cli/v2"
   "github.com/AlecAivazis/survey/v2"
@@ -49,7 +48,6 @@ func selectDoc(projectAuthor, projectName string) (map[string]interface{}, error
 }
 
 func ShowDocAction(c *cli.Context) error {
-  log.Println("ListDocAction")
   // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {
@@ -68,7 +66,6 @@ func ShowDocAction(c *cli.Context) error {
 }
 
 func AddDocAction(c *cli.Context) error {
-  log.Println("AddDocAction")
   // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {
@@ -111,7 +108,6 @@ func AddDocAction(c *cli.Context) error {
 }
 
 func UpdateDocAction(c *cli.Context) error {
-  log.Println("UpdateDocAction")
   // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {
@@ -163,7 +159,6 @@ func UpdateDocAction(c *cli.Context) error {
 }
 
 func DeleteDocAction(c *cli.Context) error {
-  log.Println("DeleteDocAction")
   // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {

@@ -1,7 +1,6 @@
 package config
 
 import (
-  "log"
   "errors"
   "scaf/cli/user"
   "scaf/cli/project"
@@ -25,7 +24,6 @@ func setUserConfig(field string, value interface{}) (string, error) {
 }
 
 func setProjectConfig(field string, value interface{}) (string, error) {
-  log.Println(value)
   switch field {
   case AddMember:
     return project.AddMember(value.(string))

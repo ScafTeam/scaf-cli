@@ -2,7 +2,6 @@ package auth
 // TODO: rename this file to appropriate name
 
 import (
-  "log"
   "net/http"
   "encoding/json"
   "scaf/cli/scafio"
@@ -10,7 +9,6 @@ import (
 )
 
 func SignIn(email, password string) (string, error) {
-  log.Println("signIn:", email, password) // TODO: remove logging password on production
 
   signInRequest := map[string]string{
     "email":    email,
@@ -55,7 +53,6 @@ func SignOut() (string, error) {
 }
 
 func ForgetPassword(email string) (string, error) {
-  log.Println("forgetPassword:", email)
 
   forgetPasswordRequest := map[string]string{
     "email": email,
@@ -82,7 +79,6 @@ func ForgetPassword(email string) (string, error) {
 }
 
 func SignUp(email, password string) (string, error) {
-  log.Println("signup", email, password) // TODO: remove logging password on production
 
   signUpRequest := map[string]string{
     "email":    email,

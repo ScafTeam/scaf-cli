@@ -3,13 +3,11 @@ package user
 import (
   "encoding/json"
   "errors"
-  "log"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
 )
 
 func GetUser(email string) (map[string]interface{}, error) {
-  log.Println("getUser:", email)
   req, err := scafreq.NewRequest("GET", "/user/" + email, nil)
   if err != nil {
     return nil, err
@@ -20,7 +18,6 @@ func GetUser(email string) (map[string]interface{}, error) {
   }
   defer resp.Body.Close()
   body, err := scafio.ReadBody(resp)
-  log.Println("getUser body:", body)
   if err != nil {
     return nil, err
   }
@@ -36,7 +33,6 @@ func GetUser(email string) (map[string]interface{}, error) {
 }
 
 func UpdateUser(data map[string]interface{}) (string, error) {
-  log.Println("updateUser:", data)
   updateUserRequestJSON, err := json.Marshal(data)
   if err != nil {
     return "", err
@@ -65,7 +61,6 @@ func UpdateUser(data map[string]interface{}) (string, error) {
 }
 
 func ChangePassword(oldPassword string, newPassword string) (string, error) {
-  log.Println("changePassword:", oldPassword, newPassword)
 
   changePasswordRequest := map[string]interface{}{
     "oldPassword": oldPassword,

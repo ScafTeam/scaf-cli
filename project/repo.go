@@ -3,14 +3,12 @@ package project
 import (
   "os/exec"
   "errors"
-  "log"
   "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
 )
 
 func AddRepo(repoName, repoUrl string) (string, error) {
-  log.Println("addRepo:", repoName, repoUrl)
 
   // get local project
   localProject, err := GetLocalProject()
@@ -57,7 +55,6 @@ func AddRepo(repoName, repoUrl string) (string, error) {
 }
 
 func UpdateRepo(repoId, repoName, repoUrl string) (string, error) {
-  log.Println("updateRepo:", repoId, repoName, repoUrl)
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -104,7 +101,6 @@ func UpdateRepo(repoId, repoName, repoUrl string) (string, error) {
 }
 
 func DeleteRepo(repoId string) (string, error) {
-  log.Println("deleteRepo:", repoId)
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {
@@ -149,7 +145,6 @@ func DeleteRepo(repoId string) (string, error) {
 }
 
 func PullRepo(repoId string) (string, error) {
-  log.Println("pullRepo:", repoId)
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {

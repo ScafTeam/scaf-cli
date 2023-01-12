@@ -1,14 +1,12 @@
 package scafreq
 
 import (
-  "log"
   "net/http"
   "net/http/cookiejar"
   "os"
-  "log"
   "net/url"
   "bytes"
-  "scaf/cli/scafio"
+  // "scaf/cli/scafio"
 )
 
 // GetClient returns a client with cookiejar, and JWT if exists
@@ -42,7 +40,6 @@ func NewRequest(method string, path string, body []byte) (*http.Request, error) 
   if path[len(path)-1] != '/' {
     path += "/"
   }
-  log.Printf(os.Getenv("SCAF_BACKEND_URL") + path)
   req, err := http.NewRequest(
     method,
     os.Getenv("SCAF_BACKEND_URL") + path,
@@ -62,18 +59,15 @@ func DoRequest(req *http.Request) (*http.Response, error) {
   if err != nil {
     return nil, err
   }
-  log.Println("DoRequest: ", req.Method, req.URL, req.Body)
   resp, err := client.Do(req)
   if err != nil {
     return nil, err
   }
   // show body for debug
-  if bodyMap, err := scafio.ReadBody(resp); err == nil {
-    log.Println("DoRequest resp body: ")
-    for k, v := range bodyMap {
-      log.Println("  ", k, ":", v)
-    }
-  }
+  // if bodyMap, err := scafio.ReadBody(resp); err == nil {
+    // for k, v := range bodyMap {
+    // }
+  // }
   err = SaveCookies(resp.Cookies())
   if err != nil {
     return nil, err

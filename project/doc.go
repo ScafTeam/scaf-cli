@@ -1,14 +1,12 @@
 package project
 
 import (
-  "log"
   "encoding/json"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
 )
 
 func GetDocs(projectAuthor string, projectName string) ([]interface{}, error) {
-  log.Println("getDocList:", projectAuthor, projectName)
   req, err := scafreq.NewRequest(
     "GET",
     "/user/" + projectAuthor + "/project/" + projectName + "/docs",
@@ -26,12 +24,10 @@ func GetDocs(projectAuthor string, projectName string) ([]interface{}, error) {
   if err != nil {
     return nil, err
   }
-  log.Println("body:", body)
   return body["docs"].(map[string]interface{})["docs"].([]interface{}), nil
 }
 
 func AddDoc(projectAuthor, projectName, title, content string) (string, error) {
-  log.Println("addDoc:", projectAuthor, projectName, title, content)
   // add doc
   addDocReq := map[string]interface{}{
     "title": title,
@@ -59,7 +55,6 @@ func AddDoc(projectAuthor, projectName, title, content string) (string, error) {
 }
 
 func UpdateDoc(projectAuthor, projectName, docId, title, content string) (string, error) {
-  log.Println("updateDoc:", projectAuthor, projectName, docId, title, content)
   // update doc
   updateDocReq := map[string]interface{}{
     "id": docId,
@@ -88,7 +83,6 @@ func UpdateDoc(projectAuthor, projectName, docId, title, content string) (string
 }
 
 func DeleteDoc(projectAuthor, projectName, docId string) (string, error) {
-  log.Println("deleteDoc:", projectAuthor, projectName, docId)
   // delete doc
   deleteDocReq := map[string]interface{}{
     "id": docId,

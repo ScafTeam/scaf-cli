@@ -3,13 +3,11 @@ package project
 import (
   "errors"
   "encoding/json"
-  "log"
   "scaf/cli/scafio"
   "scaf/cli/scafreq"
 )
 
 func GetWorkflows(projectAuthor string, projectName string) ([]interface{}, error) {
-  log.Println("getWorkflows:", projectAuthor, projectName)
   req, err := scafreq.NewRequest(
     "GET",
     "/user/" + projectAuthor + "/project/" + projectName + "/kanban",
@@ -32,7 +30,6 @@ func GetWorkflows(projectAuthor string, projectName string) ([]interface{}, erro
 }
 
 func AddWorkflow(projectAuthor, projectName, workflowName string) (string, error) {
-  log.Println("addWorkflow:", projectAuthor, projectName, workflowName)
   // add workflow
   addWorkflowReq := map[string]interface{}{
     "name": workflowName,
@@ -59,7 +56,6 @@ func AddWorkflow(projectAuthor, projectName, workflowName string) (string, error
 }
 
 func UpdateWorkflow(projectAuthor, projectName, workflowID, workflowName string) (string, error) {
-  log.Println("updateWorkflow:", projectAuthor, projectName, workflowName)
   // update workflow
   updateWorkflowReq := map[string]interface{}{
     "id": workflowID,
@@ -87,7 +83,6 @@ func UpdateWorkflow(projectAuthor, projectName, workflowID, workflowName string)
 }
 
 func DeleteWorkflow(projectAuthor, projectName, workflowID string) (string, error) {
-  log.Println("deleteWorkflow:", projectAuthor, projectName, workflowID)
   // delete workflow
   deleteWorkflowReq := map[string]interface{}{
     "id": workflowID,
@@ -114,7 +109,6 @@ func DeleteWorkflow(projectAuthor, projectName, workflowID string) (string, erro
 }
 
 func GetTasks(projectAuthor, projectName, workflowID string) ([]interface{}, error) {
-  log.Println("getTasks:", projectAuthor, projectName, workflowID)
   workflowList, err := GetWorkflows(projectAuthor, projectName)
   if err != nil {
     return nil, err
@@ -132,7 +126,6 @@ func GetTasks(projectAuthor, projectName, workflowID string) ([]interface{}, err
 }
 
 func AddTask(projectAuthor string, projectName string, workflowID string, task map[string]interface{}) (string, error) {
-  log.Println("addTask:", projectAuthor, projectName, workflowID, task)
   // add task
   addTaskReq := map[string]interface{}{
     "workflowId": workflowID,
@@ -161,7 +154,6 @@ func AddTask(projectAuthor string, projectName string, workflowID string, task m
 }
 
 func UpdateTask(projectAuthor string, projectName string, workflowID string, taskID string, task map[string]interface{}) (string, error) {
-  log.Println("updateTask:", projectAuthor, projectName, workflowID, task)
   // update task
   updateTaskReq := map[string]interface{}{
     "id": taskID,
@@ -191,7 +183,6 @@ func UpdateTask(projectAuthor string, projectName string, workflowID string, tas
 }
 
 func DeleteTask(projectAuthor string, projectName string, workflowID string, taskID string) (string, error) {
-  log.Println("deleteTask:", projectAuthor, projectName, workflowID, taskID)
   // delete task
   deleteTaskReq := map[string]interface{}{
     "id": taskID,
@@ -219,7 +210,6 @@ func DeleteTask(projectAuthor string, projectName string, workflowID string, tas
 }
 
 func MoveTask(projectAuthor string, projectName string, workflowID string, taskID string, toWorkflowID string) (string, error) {
-  log.Println("moveTask:", projectAuthor, projectName, workflowID, taskID, toWorkflowID)
   // move task
   moveTaskReq := map[string]interface{}{
     "id": taskID,
