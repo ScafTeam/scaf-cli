@@ -97,11 +97,18 @@ func UpdateRepoAction(c *cli.Context) error {
 }
 
 func selectRepo() (map[string]interface{}, error) {
+  // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {
     return nil, err
   }
-  repoList := localProject["repos"].([]interface{})
+  projectAuthor := localProject["author"].(string)
+  projectName := localProject["name"].(string)
+  // get workflow list
+  repoList, err := project.GetRepos(projectAuthor, projectName)
+  if err != nil {
+    return nil, err
+  }
   repoStringList := []string{}
   for _, repo := range repoList {
     repoMap, ok := repo.(map[string]interface{})
