@@ -8,8 +8,28 @@ import (
   "scaf/cli/scafreq"
 )
 
-func AddRepo(repoName, repoUrl string) (string, error) {
+func GetRepos(projectAuthor string, projectName string) ([]interface{}, error) {
+  req, err := scafreq.NewRequest(
+    "GET",
+    "/user/" + projectAuthor + "/project/" + projectName + "/repo",
+    nil,
+  )
+  if err != nil {
+    return nil, err
+  }
+  resp, err := scafreq.DoRequest(req)
+  if err != nil {
+    return nil, err
+  }
+  defer resp.Body.Close()
+  body, err := scafio.ReadBody(resp)
+  if err != nil {
+    return nil, err
+  }
+  return body["repos"].([]interface{}), nil
+}
 
+func AddRepo(repoName, repoUrl string) (string, error) {
   // get local project
   localProject, err := GetLocalProject()
   if err != nil {

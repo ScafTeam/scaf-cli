@@ -9,15 +9,17 @@ import (
 )
 
 func ListRepoAction(c *cli.Context) error {
-  // get local repo list
+  // get local project
   localProject, err := project.GetLocalProject()
   if err != nil {
     return err
   }
-  repoList, ok := localProject["repos"].([]interface{})
-  if !ok {
-    fmt.Println("No repo found")
-    return nil
+  projectAuthor := localProject["author"].(string)
+  projectName := localProject["name"].(string)
+  // get workflow list
+  repoList, err := project.GetRepos(projectAuthor, projectName)
+  if err != nil {
+    return err
   }
   for _, repo := range repoList {
     repoMap, ok := repo.(map[string]interface{})
